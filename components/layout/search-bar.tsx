@@ -12,7 +12,6 @@ export function SearchBar() {
   
   const [searchTerm, setSearchTerm] = useState(urlSearch);
 
-  // Sync state with URL when it changes
   useEffect(() => {
     setSearchTerm(urlSearch);
   }, [urlSearch]);
