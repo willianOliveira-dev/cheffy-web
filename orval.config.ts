@@ -1,4 +1,3 @@
-
 import { defineConfig } from 'orval';
 import { loadEnvConfig } from '@next/env';
 
