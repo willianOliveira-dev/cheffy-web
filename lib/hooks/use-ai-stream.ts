@@ -4,7 +4,11 @@ import { useCallback, useRef, useState } from "react";
 
 type AiStreamRequestData = {
   message: string;
-  measurePreference: string;
+  measurePreference: "grams" | "grams-and-cups";
+};
+
+type AiStreamCallbacks = {
+  onFinish?: (content: string) => void;
 };
 
 type AiStreamState = {
@@ -14,7 +18,7 @@ type AiStreamState = {
 };
 
 type UseAiStreamReturn = AiStreamState & {
-  sendMessage: (recipeId: string, data: AiStreamRequestData) => void;
+  sendMessage: (recipeId: string, data: AiStreamRequestData, callbacks?: AiStreamCallbacks) => void;
   reset: () => void;
 };
 
@@ -25,6 +29,28 @@ const INITIAL_STATE: AiStreamState = {
 };
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+
+function extractStreamToken(payload: unknown): string | null {
+  if (typeof payload === "string") return payload;
+
+  if (!payload || typeof payload !== "object") return null;
+
+  const record = payload as Record<string, unknown>;
+  const directToken = record.t ?? record.text ?? record.content ?? record.delta;
+
+  if (typeof directToken === "string") return directToken;
+
+  const choices = record.choices;
+  if (Array.isArray(choices)) {
+    const firstChoice = choices[0] as Record<string, unknown> | undefined;
+    const delta = firstChoice?.delta as Record<string, unknown> | undefined;
+    const content = delta?.content ?? firstChoice?.text;
+
+    if (typeof content === "string") return content;
+  }
+
+  return null;
+}
 
 export function useAiStream(): UseAiStreamReturn {
   const [state, setState] = useState<AiStreamState>(INITIAL_STATE);
@@ -37,7 +63,7 @@ export function useAiStream(): UseAiStreamReturn {
   }, []);
 
   const sendMessage = useCallback(
-    (recipeId: string, data: AiStreamRequestData): void => {
+    (recipeId: string, data: AiStreamRequestData, callbacks?: AiStreamCallbacks): void => {
       abortControllerRef.current?.abort();
 
       const controller = new AbortController();
@@ -49,7 +75,7 @@ export function useAiStream(): UseAiStreamReturn {
         error: null,
       });
 
-      startStream(recipeId, data, controller.signal, setState).catch(() => {
+      startStream(recipeId, data, controller.signal, setState, callbacks).catch(() => {
         /* errors handled inside startStream */
       });
     },
@@ -64,6 +90,7 @@ async function startStream(
   data: AiStreamRequestData,
   signal: AbortSignal,
   setState: React.Dispatch<React.SetStateAction<AiStreamState>>,
+  callbacks?: AiStreamCallbacks,
 ): Promise<void> {
   try {
     const response = await fetch(
@@ -104,6 +131,20 @@ async function startStream(
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = "";
+    let streamedContent = "";
+
+    const appendToken = (token: string) => {
+      streamedContent += token;
+      setState((prev) => ({
+        ...prev,
+        streamedContent: prev.streamedContent + token,
+      }));
+    };
+
+    const finish = () => {
+      setState((prev) => ({ ...prev, isStreaming: false }));
+      callbacks?.onFinish?.(streamedContent);
+    };
 
     while (true) {
       const { done, value } = await reader.read();
@@ -117,7 +158,7 @@ async function startStream(
         if (rawLine.trim().length === 0) continue;
 
         if (rawLine.startsWith("event: done")) {
-          setState((prev) => ({ ...prev, isStreaming: false }));
+          finish();
           return;
         }
 
@@ -129,7 +170,7 @@ async function startStream(
           const payload = rawLine.slice(5).replace(/^ /, "");
 
           if (payload === "[DONE]") {
-            setState((prev) => ({ ...prev, isStreaming: false }));
+            finish();
             return;
           }
 
@@ -148,28 +189,25 @@ async function startStream(
                   }));
                   return;
                 }
-                if ("t" in parsed) {
-                  setState((prev) => ({
-                    ...prev,
-                    streamedContent: prev.streamedContent + (parsed as { t: string }).t,
-                  }));
+                const token = extractStreamToken(parsed);
+                if (token !== null) {
+                  appendToken(token);
                   continue;
                 }
+
+                continue;
               }
             } catch {
               /* Not JSON — treat as text token */
             }
           }
 
-          setState((prev) => ({
-            ...prev,
-            streamedContent: prev.streamedContent + payload,
-          }));
+          appendToken(payload);
         }
       }
     }
 
-    setState((prev) => ({ ...prev, isStreaming: false }));
+    finish();
   } catch (error) {
     if (signal.aborted) return;
 

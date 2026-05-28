@@ -81,7 +81,7 @@ export function CategoryPageClient({ slug }: CategoryPageClientProps) {
 
   const handlePageChange = (nextPage: number) => {
     setPage(nextPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (isCategoryError) {
