@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Heart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -31,20 +31,17 @@ export function FavoriteRecipeButton({
   size = "default",
   onClickCapture,
 }: FavoriteRecipeButtonProps) {
-  const [isFavorited, setIsFavorited] = useState(initialFavorited);
-
-  useEffect(() => {
-    setIsFavorited(initialFavorited);
-  }, [initialFavorited]);
+  const [favoriteOverrides, setFavoriteOverrides] = useState<Record<string, boolean>>({});
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { data: session } = authClient.useSession();
+  const isFavorited = favoriteOverrides[recipeId] ?? initialFavorited;
 
   const queryClient = useQueryClient();
 
   const favoriteMutation = useFavoriteRecipe({
     mutation: {
       onSuccess: () => {
-        setIsFavorited(true);
+        setFavoriteOverrides((current) => ({ ...current, [recipeId]: true }));
         toast.success("Receita adicionada aos favoritos!");
         queryClient.invalidateQueries({ queryKey: getGetRecipesQueryKey() });
         queryClient.invalidateQueries({ queryKey: getGetMyFavoriteRecipesQueryKey() });
@@ -59,7 +56,7 @@ export function FavoriteRecipeButton({
   const unfavoriteMutation = useUnfavoriteRecipe({
     mutation: {
       onSuccess: () => {
-        setIsFavorited(false);
+        setFavoriteOverrides((current) => ({ ...current, [recipeId]: false }));
         toast.success("Receita removida dos favoritos.");
         queryClient.invalidateQueries({ queryKey: getGetRecipesQueryKey() });
         queryClient.invalidateQueries({ queryKey: getGetMyFavoriteRecipesQueryKey() });

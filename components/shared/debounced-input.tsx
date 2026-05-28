@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 
 export function DebouncedSearchInput({
@@ -12,27 +12,31 @@ export function DebouncedSearchInput({
   placeholder?: string;
   className?: string;
 }) {
-  const [localValue, setLocalValue] = useState(value);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (localValue !== value) {
-        onChange(localValue);
-      }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const nextValue = event.target.value;
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    timeoutRef.current = setTimeout(() => {
+      if (nextValue !== value) onChange(nextValue);
     }, 500);
-    return () => clearTimeout(timeout);
-  }, [localValue, onChange, value]);
+  };
 
   return (
     <Input
+      key={value}
       placeholder={placeholder}
       className={className}
-      value={localValue}
-      onChange={(e) => setLocalValue(e.target.value)}
+      defaultValue={value}
+      onChange={handleChange}
     />
   );
 }

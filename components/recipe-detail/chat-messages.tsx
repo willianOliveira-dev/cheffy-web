@@ -26,8 +26,7 @@ type ChatMessagesProps = {
   messages: ChatMessage[];
   isStreaming: boolean;
   streamedContent: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  session: any;
+  session: { user?: { image?: string | null } } | null;
   isFullscreen?: boolean;
 };
 
@@ -85,10 +84,8 @@ export function ChatMessages({
 
               {isUser && (
                 <div className="mt-1 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary">
-                  {/* @ts-ignore */}
                   {session?.user?.image ? (
                     <Image
-                      /* @ts-ignore */
                       src={session.user.image}
                       alt="Avatar do usuário"
                       width={32}

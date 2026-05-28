@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -9,15 +8,12 @@ export function SearchBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlSearch = searchParams.get("search") || "";
-  
-  const [searchTerm, setSearchTerm] = useState(urlSearch);
 
-  useEffect(() => {
-    setSearchTerm(urlSearch);
-  }, [urlSearch]);
-
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const searchTerm = String(formData.get("search") ?? "");
+
     if (searchTerm.trim()) {
       router.push(`/receitas?search=${encodeURIComponent(searchTerm.trim())}`);
     }
@@ -29,10 +25,11 @@ export function SearchBar() {
         <Search className="h-4 w-4 text-muted-foreground" />
       </div>
       <Input
+        key={urlSearch}
+        name="search"
         type="search"
         placeholder="Buscar receitas..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        defaultValue={urlSearch}
         className="pl-9 bg-muted/50 border-transparent focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-primary rounded-full transition-colors"
       />
     </form>

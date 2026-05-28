@@ -3,9 +3,8 @@
 import type { KeyboardEvent } from "react";
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronUp, Maximize2, Send, User } from "lucide-react";
+import { Maximize2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
-import { Streamdown } from "streamdown";
 import type { Recipe } from "@/api/generated/model";
 import { authClient } from "@/lib/auth-client";
 import { useAiStream } from "@/lib/hooks/use-ai-stream";

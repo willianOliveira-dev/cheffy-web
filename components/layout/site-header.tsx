@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { useGetHome } from "@/api/generated/home/home";
 import { Logo } from "./logo";
@@ -26,7 +27,9 @@ export function SiteHeader() {
           </div>
         </div>
         <div className="flex items-center justify-end space-x-4">
-          <SearchBar />
+          <Suspense fallback={null}>
+            <SearchBar />
+          </Suspense>
           <AuthButton />
         </div>
       </div>

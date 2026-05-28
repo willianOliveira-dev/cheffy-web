@@ -42,6 +42,7 @@ export const customInstance = <T>(
     }).then(({ data }) => data);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type ErrorType<Error> = ApiError;
 
 export type BodyType<Body> = Body;

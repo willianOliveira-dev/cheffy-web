@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { keepPreviousData } from "@tanstack/react-query";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, Heart, LogIn, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { GetMyFavoriteRecipesOrderBy } from "@/api/generated/model/getMyFavoriteRecipesOrderBy";
 import { useGetMyFavoriteRecipes } from "@/api/generated/users/users";
@@ -15,13 +13,10 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { RecipeCard } from "@/components/shared/recipe-card";
 import { RecipeCardSkeleton } from "@/components/shared/recipe-card-skeleton";
-import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
