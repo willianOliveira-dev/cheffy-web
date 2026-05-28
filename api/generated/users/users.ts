@@ -20,6 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  GetMyFavoriteRecipesParams,
   User,
   UserFavoriteRecipes
 } from '../model';
@@ -119,13 +120,14 @@ export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = Err
 
 
 export const getMyFavoriteRecipes = (
-
+    params?: GetMyFavoriteRecipesParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
 
 
       return customInstance<UserFavoriteRecipes>(
-      {url: `/api/v1/me/favorites`, method: 'GET', signal
+      {url: `/api/v1/me/favorites`, method: 'GET',
+        params, signal
     },
       options);
     }
@@ -133,23 +135,23 @@ export const getMyFavoriteRecipes = (
 
 
 
-export const getGetMyFavoriteRecipesQueryKey = () => {
+export const getGetMyFavoriteRecipesQueryKey = (params?: GetMyFavoriteRecipesParams,) => {
     return [
-    `/api/v1/me/favorites`
+    `/api/v1/me/favorites`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetMyFavoriteRecipesQueryOptions = <TData = Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetMyFavoriteRecipesQueryOptions = <TData = Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError = ErrorType<unknown>>(params?: GetMyFavoriteRecipesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMyFavoriteRecipesQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetMyFavoriteRecipesQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyFavoriteRecipes>>> = ({ signal }) => getMyFavoriteRecipes(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyFavoriteRecipes>>> = ({ signal }) => getMyFavoriteRecipes(params, requestOptions, signal);
 
 
 
@@ -163,7 +165,7 @@ export type GetMyFavoriteRecipesQueryError = ErrorType<unknown>
 
 
 export function useGetMyFavoriteRecipes<TData = Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>> & Pick<
+ params: undefined |  GetMyFavoriteRecipesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMyFavoriteRecipes>>,
           TError,
@@ -173,7 +175,7 @@ export function useGetMyFavoriteRecipes<TData = Awaited<ReturnType<typeof getMyF
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetMyFavoriteRecipes<TData = Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>> & Pick<
+ params?: GetMyFavoriteRecipesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMyFavoriteRecipes>>,
           TError,
@@ -183,16 +185,16 @@ export function useGetMyFavoriteRecipes<TData = Awaited<ReturnType<typeof getMyF
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetMyFavoriteRecipes<TData = Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ params?: GetMyFavoriteRecipesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
 export function useGetMyFavoriteRecipes<TData = Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ params?: GetMyFavoriteRecipesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyFavoriteRecipes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetMyFavoriteRecipesQueryOptions(options)
+  const queryOptions = getGetMyFavoriteRecipesQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

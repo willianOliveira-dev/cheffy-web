@@ -9,5 +9,5 @@ export type RecipeAssistantResponseProvider = typeof RecipeAssistantResponseProv
 
 
 export const RecipeAssistantResponseProvider = {
-  ollama: 'ollama',
+  groq: 'groq',
 } as const;

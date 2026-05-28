@@ -11,6 +11,10 @@ export type RecipeNutritionLabel = {
   totalWeightInGrams: number;
   servingWeightInGrams: number;
   servingsPerRecipe: number | null;
+  servingUnit: string | null;
+  servingUnitPlural: string | null;
+  servingDescription: string | null;
+  servingsDescription: string | null;
   energyKcalPer100g: number;
   carbohydratesPer100g: number;
   totalSugarsPer100g: number | null;

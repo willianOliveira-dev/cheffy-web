@@ -5,5 +5,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { RecipeSummary } from './recipeSummary';
+import type { UserFavoriteRecipesMeta } from './userFavoriteRecipesMeta';
 
-export type UserFavoriteRecipes = RecipeSummary[];
+export interface UserFavoriteRecipes {
+  items: RecipeSummary[];
+  meta: UserFavoriteRecipesMeta;
+}
