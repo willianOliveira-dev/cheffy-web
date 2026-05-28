@@ -4,7 +4,12 @@ import { useMemo } from "react";
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
 import { Info } from "lucide-react";
 import type { RecipeNutritionLabel } from "@/api/generated/model";
-import { formatNumber, kcalToKj } from "@/lib/recipe-formatters";
+import {
+  formatNumber,
+  formatNutritionServingLabel,
+  formatNutritionServingsLabel,
+  kcalToKj,
+} from "@/lib/recipe-formatters";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -31,10 +36,8 @@ type NutritionRow = {
 
 export function NutritionFactsTable({ nutrition }: NutritionFactsTableProps) {
   const rows = useMemo(() => buildNutritionRows(nutrition), [nutrition]);
-  const servingLabel = nutrition?.servingWeightInGrams
-    ? `${formatNumber(nutrition.servingWeightInGrams, 0)} g`
-    : "Porção";
-
+  const servingLabel = formatNutritionServingLabel(nutrition);
+  const servingsLabel = formatNutritionServingsLabel(nutrition);
   const columns = useMemo<ColumnDef<NutritionRow>[]>(
     () => [
       {
@@ -93,7 +96,7 @@ export function NutritionFactsTable({ nutrition }: NutritionFactsTableProps) {
         <CardHeader className="border-b">
           <CardTitle className="uppercase tracking-wide">Informação nutricional</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Porções por receita: {nutrition.servingsPerRecipe ?? "-"} · Porção: {servingLabel}
+            Porções por receita: {servingsLabel} · Porção: {servingLabel}
           </p>
         </CardHeader>
         <CardContent className="pt-4">

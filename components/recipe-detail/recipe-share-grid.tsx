@@ -94,7 +94,7 @@ export function RecipeShareGrid({ recipe }: RecipeShareGridProps) {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shareUrl);
     setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
+    setTimeout(() => setCopied(false), 1800);
   };
 
   return (

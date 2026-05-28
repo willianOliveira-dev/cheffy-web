@@ -2,7 +2,15 @@
 
 import { forwardRef } from "react";
 import type { Recipe } from "@/api/generated/model";
-import { formatDifficulty, formatMinutes, formatNumber, formatYield, kcalToKj } from "@/lib/recipe-formatters";
+import {
+  formatDifficulty,
+  formatMinutes,
+  formatNumber,
+  formatNutritionServingLabel,
+  formatNutritionServingsLabel,
+  formatYield,
+  kcalToKj,
+} from "@/lib/recipe-formatters";
 
 type RecipePrintDocumentProps = {
   recipe: Recipe;
@@ -11,6 +19,8 @@ type RecipePrintDocumentProps = {
 export const RecipePrintDocument = forwardRef<HTMLDivElement, RecipePrintDocumentProps>(
   function RecipePrintDocument({ recipe }, ref) {
     const sections = [...(recipe.sections ?? [])].sort((a, b) => a.position - b.position);
+    const nutritionServingLabel = formatNutritionServingLabel(recipe.nutritionLabel);
+    const nutritionServingsLabel = formatNutritionServingsLabel(recipe.nutritionLabel);
 
     return (
       <div ref={ref} className="bg-white p-10 text-black">
@@ -29,42 +39,48 @@ export const RecipePrintDocument = forwardRef<HTMLDivElement, RecipePrintDocumen
 
         <main className="mt-8 grid gap-8">
           <section>
-            <h2 className="mb-4 border-b border-black pb-2 text-2xl font-bold">Ingredientes</h2>
-            <div className="grid gap-5">
-              {sections.map((section) => (
-                <div key={section.id}>
-                  <h3 className="mb-2 text-lg font-bold">{section.title}</h3>
-                  <ul className="grid gap-1 text-sm">
-                    {[...(section.ingredients ?? [])].sort((a, b) => a.position - b.position).map((item) => (
-                      <li key={item.id}>• {item.displayText}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </section>
+            <h2 className="mb-4 border-b border-black pb-2 text-2xl font-bold">Seções da receita</h2>
+            <div className="grid gap-7">
+              {sections.map((section) => {
+                const ingredients = [...(section.ingredients ?? [])].sort((a, b) => a.position - b.position);
+                const steps = [...(section.steps ?? [])].sort((a, b) => a.position - b.position);
 
-          <section>
-            <h2 className="mb-4 border-b border-black pb-2 text-2xl font-bold">Modo de preparo</h2>
-            <div className="grid gap-5">
-              {sections.map((section) => (
-                <div key={section.id}>
-                  <h3 className="mb-2 text-lg font-bold">{section.title}</h3>
-                  <ol className="grid gap-3 text-sm">
-                    {[...(section.steps ?? [])].sort((a, b) => a.position - b.position).map((step, index) => (
-                      <li key={step.id} className="grid grid-cols-[2rem_1fr] gap-3">
-                        <span className="flex h-7 w-7 items-center justify-center rounded-full border border-black text-xs font-bold">
-                          {index + 1}
-                        </span>
-                        <span>
-                          {step.description}
-                          {step.stepTime ? <strong> Tempo: {formatMinutes(step.stepTime)}.</strong> : null}
-                        </span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              ))}
+                return (
+                  <div key={section.id} className="break-inside-avoid">
+                    <h3 className="mb-3 text-xl font-bold">{section.title}</h3>
+
+                    {ingredients.length > 0 && (
+                      <div className="mb-4">
+                        <h4 className="mb-2 text-sm font-bold uppercase">Ingredientes</h4>
+                        <ul className="grid gap-1 text-sm">
+                          {ingredients.map((item) => (
+                            <li key={item.id}>• {item.displayText}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {steps.length > 0 && (
+                      <div>
+                        <h4 className="mb-2 text-sm font-bold uppercase">Modo de preparo</h4>
+                        <ol className="grid gap-3 text-sm">
+                          {steps.map((step, index) => (
+                            <li key={step.id} className="grid grid-cols-[2rem_1fr] gap-3">
+                              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-black text-xs font-bold">
+                                {index + 1}
+                              </span>
+                              <span>
+                                {step.description}
+                                {step.stepTime ? <strong> Tempo: {formatMinutes(step.stepTime)}.</strong> : null}
+                              </span>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </section>
 
@@ -72,15 +88,15 @@ export const RecipePrintDocument = forwardRef<HTMLDivElement, RecipePrintDocumen
             <section>
               <h2 className="mb-4 border-b border-black pb-2 text-2xl font-bold">Informação nutricional</h2>
               <p className="mb-2 text-sm">
-                Porções por receita: {recipe.nutritionLabel.servingsPerRecipe ?? "-"} · Porção:{" "}
-                {formatNumber(recipe.nutritionLabel.servingWeightInGrams, 0)} g
+                Porções por receita: {nutritionServingsLabel} · Porção:{" "}
+                {nutritionServingLabel}
               </p>
               <table className="w-full border-collapse text-sm">
                 <thead>
                   <tr>
                     <th className="border border-black p-2 text-left">Nutriente</th>
                     <th className="border border-black p-2 text-left">100 g</th>
-                    <th className="border border-black p-2 text-left">Porção</th>
+                    <th className="border border-black p-2 text-left">{nutritionServingLabel}</th>
                     <th className="border border-black p-2 text-left">%VD*</th>
                   </tr>
                 </thead>

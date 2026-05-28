@@ -1,4 +1,9 @@
-import type { RecipeDifficulty, RecipeSectionIngredientUnit, RecipeYieldUnit } from "@/api/generated/model";
+import type {
+  RecipeDifficulty,
+  RecipeNutritionLabel,
+  RecipeSectionIngredientUnit,
+  RecipeYieldUnit,
+} from "@/api/generated/model";
 
 const difficultyMap: Record<RecipeDifficulty, string> = {
   EASY: "Fácil",
@@ -97,4 +102,35 @@ export function formatNumber(value: number | null | undefined, fractionDigits = 
 export function kcalToKj(kcal: number | null | undefined) {
   if (kcal === null || kcal === undefined) return null;
   return Math.round(kcal * 4.184);
+}
+
+export function formatNutritionServingLabel(nutrition: RecipeNutritionLabel | null | undefined) {
+  if (!nutrition) return "Porção";
+
+  const description = nutrition.servingDescription?.trim();
+  if (description) return description;
+
+  return nutrition.servingWeightInGrams
+    ? `${formatNumber(nutrition.servingWeightInGrams, 0)} g`
+    : "Porção";
+}
+
+export function formatNutritionServingsLabel(nutrition: RecipeNutritionLabel | null | undefined) {
+  if (!nutrition) return "-";
+
+  const description = nutrition.servingsDescription?.trim();
+  if (description) return description;
+
+  if (nutrition.servingsPerRecipe === null || nutrition.servingsPerRecipe === undefined) {
+    return "-";
+  }
+
+  const unit =
+    nutrition.servingsPerRecipe === 1
+      ? nutrition.servingUnit
+      : nutrition.servingUnitPlural ?? nutrition.servingUnit;
+
+  return unit
+    ? `${formatNumber(nutrition.servingsPerRecipe, 0)} ${unit}`
+    : formatNumber(nutrition.servingsPerRecipe, 0);
 }

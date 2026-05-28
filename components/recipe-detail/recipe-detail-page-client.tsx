@@ -5,22 +5,21 @@ import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { AlertCircle } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useGetRecipeBySlug, getGetRecipesQueryKey } from "@/api/generated/recipes/recipes";
-import { getGetMyFavoriteRecipesQueryKey } from "@/api/generated/users/users";
 import { getGetHomeQueryKey } from "@/api/generated/home/home";
+import { getGetRecipesQueryKey, useGetRecipeBySlug } from "@/api/generated/recipes/recipes";
+import { getGetMyFavoriteRecipesQueryKey } from "@/api/generated/users/users";
 import { SiteHeader } from "@/components/layout/site-header";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { RecipeHero } from "./recipe-hero";
-import { RecipeActionPanel } from "./recipe-action-panel";
-import { RecipeIngredients } from "./recipe-ingredients";
-import { RecipeInstructions } from "./recipe-instructions";
 import { NutritionFactsTable } from "./nutrition-facts-table";
-import { RecipeAiAssistant } from "./recipe-ai-assistant";
 import { PreparationModeDialog } from "./preparation-mode-dialog";
+import { RecipeActionPanel } from "./recipe-action-panel";
+import { RecipeAiAssistant } from "./recipe-ai-assistant";
+import { RecipeHero } from "./recipe-hero";
 import { RecipePrintDocument } from "./recipe-print-document";
+import { RecipeSections } from "./recipe-sections";
 
 type RecipeDetailPageClientProps = {
   slug: string;
@@ -48,11 +47,11 @@ export function RecipeDetailPageClient({ slug }: RecipeDetailPageClientProps) {
   const { data: recipe, isLoading, isError } = useGetRecipeBySlug(slug);
 
   useEffect(() => {
-    if (recipe) {
-      queryClient.invalidateQueries({ queryKey: getGetRecipesQueryKey() });
-      queryClient.invalidateQueries({ queryKey: getGetMyFavoriteRecipesQueryKey() });
-      queryClient.invalidateQueries({ queryKey: getGetHomeQueryKey() });
-    }
+    if (!recipe) return;
+
+    queryClient.invalidateQueries({ queryKey: getGetRecipesQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getGetMyFavoriteRecipesQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getGetHomeQueryKey() });
   }, [recipe, queryClient]);
 
   const handlePrint = useReactToPrint({
@@ -98,12 +97,11 @@ export function RecipeDetailPageClient({ slug }: RecipeDetailPageClientProps) {
         <div className="flex min-w-0 flex-col gap-10">
           <Card>
             <CardContent className="flex flex-wrap gap-2 py-4">
-              <Button asChild variant="ghost" size="sm" className="rounded-full">
-                <a href="#ingredientes">Ingredientes</a>
-              </Button>
-              <Button asChild variant="ghost" size="sm" className="rounded-full">
-                <a href="#preparo">Preparo</a>
-              </Button>
+              {sections.map((section) => (
+                <Button key={section.id} asChild variant="ghost" size="sm" className="rounded-full">
+                  <a href={`#secao-${section.id}`}>{section.title}</a>
+                </Button>
+              ))}
               <Button asChild variant="ghost" size="sm" className="rounded-full">
                 <a href="#nutricao">Nutrição</a>
               </Button>
@@ -113,8 +111,7 @@ export function RecipeDetailPageClient({ slug }: RecipeDetailPageClientProps) {
             </CardContent>
           </Card>
 
-          <RecipeIngredients sections={sections} />
-          <RecipeInstructions sections={sections} />
+          <RecipeSections sections={sections} />
           <NutritionFactsTable nutrition={recipe.nutritionLabel} />
           <RecipeAiAssistant recipe={recipe} />
         </div>

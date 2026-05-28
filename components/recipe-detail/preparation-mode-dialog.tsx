@@ -48,7 +48,7 @@ export function PreparationModeDialog({ open, onOpenChange, sections }: Preparat
   useEffect(() => {
     if (!isRunning || remainingSeconds <= 0) return;
 
-    const interval = window.setInterval(() => {
+    const interval = setInterval(() => {
       setRemainingSeconds((current) => {
         if (current <= 1) {
           window.clearInterval(interval);
@@ -60,7 +60,7 @@ export function PreparationModeDialog({ open, onOpenChange, sections }: Preparat
       });
     }, 1000);
 
-    return () => window.clearInterval(interval);
+    return () => clearInterval(interval);
   }, [isRunning, remainingSeconds]);
 
   const goToStep = (nextIndex: number) => {
