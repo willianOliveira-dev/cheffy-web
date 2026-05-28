@@ -1,5 +1,4 @@
 import { defineConfig } from 'orval';
-// @ts-expect-error - @next/env lacks type declarations
 import { loadEnvConfig } from '@next/env';
 
 loadEnvConfig(process.cwd());
