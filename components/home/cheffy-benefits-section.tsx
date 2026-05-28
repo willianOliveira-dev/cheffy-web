@@ -24,7 +24,7 @@ const benefits = [
   },
   {
     title: "Seu livro de receitas digital",
-    description: "Gostou muito de um prato? Salve nos favoritos com sua conta Google e encontre tudo rápido quando for cozinhar de novo.",
+    description: "Gostou muito de um prato? Salve nos favoritos e construa seu acervo pessoal para encontrar suas melhores receitas de forma rápida e prática.",
     icon: Heart,
   },
   {
@@ -43,7 +43,7 @@ export function CheffyBenefitsSection() {
             <SectionTitle>Como o Cheffy ajuda</SectionTitle>
           </div>
           <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-            A receita fica organizada para você cozinhar de verdade: com passos claros, medidas que fazem sentido, seus pratos favoritos sempre à mão e um assistente para tirar dúvidas bem na hora que o aperto aperta.
+            Esqueça a bagunça na hora de cozinhar. Com um formato intuitivo, passos organizados e suas receitas favoritas sempre à mão, o Cheffy te dá a confiança necessária para preparar pratos incríveis sem dor de cabeça.
           </p>
         </div>
 
