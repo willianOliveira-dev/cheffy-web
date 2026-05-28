@@ -61,7 +61,7 @@ export function ServerWakeGate({ children }: ServerWakeGateProps): ReactNode {
   if (status === "online") return children;
 
   return (
-    <main className="fixed inset-0 z-[100] flex min-h-svh items-center justify-center bg-background">
+    <main className="fixed inset-0 z-100 flex min-h-svh items-center justify-center bg-background">
       <div className="flex flex-col items-center gap-6 animate-in fade-in zoom-in-95 duration-1000 ease-out">
 
         <Image
