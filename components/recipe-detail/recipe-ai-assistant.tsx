@@ -3,7 +3,7 @@
 import type { KeyboardEvent } from "react";
 import { useState } from "react";
 import Image from "next/image";
-import { Maximize2, Send, User } from "lucide-react";
+import { ChevronDown, ChevronUp, Maximize2, Send, User } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { Streamdown } from "streamdown";
 import type { Recipe } from "@/api/generated/model";
@@ -23,26 +23,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Form } from "@/components/ui/form";
+import { ChatMessages, type ChatMessage, BotAvatar } from "./chat-messages";
+import { ChatSuggestions } from "./chat-suggestions";
+import { ChatInput } from "./chat-input";
+
 
 type RecipeAiAssistantProps = {
   recipe: Recipe;
 };
 
-type ChatMessage = {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-};
+
 
 type MeasurePreference = "grams" | "grams-and-cups";
 
@@ -51,27 +42,12 @@ type AiChatFormValues = {
   measurePreference: MeasurePreference;
 };
 
-const suggestedQuestions = [
-  "Posso substituir algum ingrediente?",
-  "Como adaptar para mais porções?",
-  "Me dê uma versão mais leve dessa receita.",
-];
 
-function BotAvatar() {
-  return (
-    <Image
-      src="/images/bot.svg"
-      alt="Assistente Cheffy"
-      width={20}
-      height={23}
-      className="h-5 w-auto"
-    />
-  );
-}
 
 export function RecipeAiAssistant({ recipe }: RecipeAiAssistantProps) {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
+  const [areSuggestionsVisible, setAreSuggestionsVisible] = useState(true);
   const isMobileViewport = useMediaQuery("(max-width: 767px)");
   const { data: session } = authClient.useSession();
   const form = useForm<AiChatFormValues>({
@@ -150,199 +126,19 @@ export function RecipeAiAssistant({ recipe }: RecipeAiAssistantProps) {
     event.preventDefault();
     sendMessage(form.getValues("message"));
   };
-
-  const renderConversation = (isFullscreen = false) => (
-    <ScrollArea
-      className={cn(
-        "min-w-0 rounded-xl bg-muted/30",
-        isFullscreen ? "min-h-0 flex-1 rounded-none border-y" : "h-[28rem]",
-      )}
-    >
-      <div className="flex min-w-0 max-w-full flex-col gap-3 overflow-hidden p-3">
-        {messages.map((item) => {
-          const isUser = item.role === "user";
-
-          return (
-            <div
-              key={item.id}
-              className={cn(
-                "flex w-full min-w-0 items-start gap-3",
-                isUser ? "justify-end" : "justify-start",
-              )}
-            >
-              {!isUser && (
-                <div className="mt-1 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-background shadow-sm">
-                  <BotAvatar />
-                </div>
-              )}
-
-              <div
-                className={cn(
-                  "min-w-0 max-w-[calc(100%_-_2.75rem)] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm sm:max-w-[78%]",
-                  isUser
-                    ? "rounded-br-md bg-primary text-primary-foreground"
-                    : "rounded-bl-md border border-border/70 bg-background text-foreground",
-                )}
-              >
-                <div
-                  className={cn(
-                    "w-full min-w-0 overflow-x-auto break-words [overflow-wrap:anywhere]",
-                    isUser
-                      ? "whitespace-pre-wrap"
-                      : "prose prose-sm max-w-none dark:prose-invert [&_*:first-child]:mt-0 [&_*:last-child]:mb-0",
-                  )}
-                >
-                  {isUser ? item.content : <Streamdown>{item.content}</Streamdown>}
-                </div>
-              </div>
-
-              {isUser && (
-                <div className="mt-1 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary">
-                  {session?.user?.image ? (
-                    <Image
-                      src={session.user.image}
-                      alt="Avatar do usuário"
-                      width={32}
-                      height={32}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <User className="h-4 w-4" />
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
-
-        {isStreaming && (
-          <div className="flex w-full min-w-0 items-start justify-start gap-3">
-            <div className="mt-1 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-background shadow-sm">
-              <BotAvatar />
-            </div>
-            <div className="min-w-0 max-w-[calc(100%_-_2.75rem)] rounded-2xl rounded-bl-md border border-border/70 bg-background px-4 py-3 text-sm leading-relaxed text-foreground shadow-sm sm:max-w-[78%]">
-              <div className="prose prose-sm max-w-none animate-pulse overflow-x-auto break-words [overflow-wrap:anywhere] dark:prose-invert [&_*:first-child]:mt-0 [&_*:last-child]:mb-0">
-                {streamedContent ? (
-                  <Streamdown animated isAnimating={isStreaming}>
-                    {streamedContent}
-                  </Streamdown>
-                ) : (
-                  <p className="text-muted-foreground">Preparando uma resposta...</p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </ScrollArea>
-  );
-
-  const renderSuggestions = (isFullscreen = false) => (
-    <div
-      className={cn(
-        "flex gap-2",
-        isFullscreen ? "shrink-0 flex-wrap px-3" : "flex-wrap",
-      )}
-    >
-      {suggestedQuestions.map((question) => (
-        <Button
-          key={question}
-          type="button"
-          size="sm"
-          variant="outline"
-          className={cn(
-            "rounded-full",
-            isFullscreen && "h-auto min-h-9 min-w-0 max-w-full whitespace-normal text-left",
-          )}
-          onClick={() => sendMessage(question)}
-        >
-          {question}
-        </Button>
-      ))}
-    </div>
-  );
-
-  const renderComposer = (isFullscreen = false) => (
-    <form
-      onSubmit={handleSubmit}
-      className={cn(isFullscreen && "w-full min-w-0 shrink-0 border-t bg-background p-3")}
-    >
-      <div className="min-w-0 overflow-hidden rounded-2xl border border-border bg-background shadow-sm transition-colors focus-within:border-primary/70 focus-within:ring-4 focus-within:ring-primary/10">
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  {...field}
-                  onKeyDown={handleTextareaKeyDown}
-                  placeholder="Pergunte sobre substituições, medidas, tempo de preparo ou variações..."
-                  className={cn(
-                    "resize-none border-0 bg-transparent px-4 py-3 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                    isFullscreen ? "min-h-24" : "min-h-28",
-                  )}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <div
-          className={cn(
-            "flex gap-2 border-t bg-muted/25 px-3 py-3",
-            isFullscreen ? "flex-row items-center justify-between" : "flex-col sm:flex-row sm:items-center sm:justify-between",
-          )}
-        >
-          <FormField
-            control={form.control}
-            name="measurePreference"
-            render={({ field }) => (
-              <FormItem>
-                <Select
-                  value={field.value}
-                  onValueChange={(value) => {
-                    if (value === "grams" || value === "grams-and-cups") {
-                      field.onChange(value);
-                    }
-                  }}
-                >
-                  <FormControl>
-                    <SelectTrigger
-                      className={cn(
-                        "h-9 rounded-full border-border/70 bg-background px-3 text-xs shadow-none",
-                        isFullscreen ? "w-[9.5rem]" : "w-full sm:w-[180px]",
-                      )}
-                    >
-                      <SelectValue placeholder="Medidas" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="grams">Apenas Gramas</SelectItem>
-                    <SelectItem value="grams-and-cups">Gramas e Xícaras</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
-
-          <Button
-            type="submit"
-            size="sm"
-            className={cn("h-9 shrink-0 rounded-full px-4", !isFullscreen && "self-end sm:self-auto")}
-            disabled={message.trim().length < 3 || isStreaming}
-          >
-            <Send data-icon="inline-start" />
-            {isStreaming ? "Respondendo" : isFullscreen ? "Enviar" : "Enviar pergunta"}
-          </Button>
-        </div>
-      </div>
-    </form>
-  );
+  const toggleSuggestionsVisibility = () => {
+    setAreSuggestionsVisible((prev) => !prev);
+  };
 
   const renderAssistantContent = (isFullscreen = false) => (
     <div className={cn("flex min-w-0 flex-col gap-4", isFullscreen && "min-h-0 flex-1 overflow-hidden py-3")}>
-      {renderConversation(isFullscreen)}
+      <ChatMessages
+        isFullscreen={isFullscreen}
+        messages={messages}
+        isStreaming={isStreaming}
+        streamedContent={streamedContent}
+        session={session ?? null}
+      />
 
       {streamError && (
         <div className={cn(isFullscreen && "shrink-0 px-4")}>
@@ -355,8 +151,21 @@ export function RecipeAiAssistant({ recipe }: RecipeAiAssistantProps) {
         </div>
       )}
 
-      {renderSuggestions(isFullscreen)}
-      {renderComposer(isFullscreen)}
+      <ChatSuggestions
+        isFullscreen={isFullscreen}
+        areSuggestionsVisible={areSuggestionsVisible}
+        toggleSuggestionsVisibility={toggleSuggestionsVisibility}
+        sendMessage={sendMessage}
+      />
+      
+      <ChatInput
+        isFullscreen={isFullscreen}
+        form={form}
+        handleSubmit={handleSubmit}
+        handleTextareaKeyDown={handleTextareaKeyDown}
+        isStreaming={isStreaming}
+        message={message}
+      />
     </div>
   );
 
