@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { keepPreviousData } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Heart, LogIn, Search } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
+import { GetMyFavoriteRecipesOrderBy } from "@/api/generated/model/getMyFavoriteRecipesOrderBy";
 import { useGetMyFavoriteRecipes } from "@/api/generated/users/users";
-import { GetMyFavoriteRecipesOrderBy } from "@/api/generated/model";
 import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
 import { cn } from "@/lib/utils";
 import { AuthDialog } from "@/components/auth/auth-dialog";
@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -34,8 +35,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { authClient } from "@/lib/auth-client";
+import { FavoritesHero } from "./favorites-hero";
+import { FavoritesAuthPrompt, FavoritesEmptyState } from "./favorites-empty-state";
+import { DebouncedSearchInput } from "@/components/shared/debounced-input";
 
 const FAVORITES_PAGE_SIZE = 10;
+
 
 type FavoriteSearchFormValues = {
   search: string;
@@ -57,7 +62,7 @@ export function FavoritesPageClient() {
   const search = useWatch({ control: form.control, name: "search" }) || "";
   const orderBy = useWatch({ control: form.control, name: "orderBy" });
   const page = useWatch({ control: form.control, name: "page" }) || 1;
-  const debouncedSearch = useDebouncedValue(search.trim(), 350);
+  const debouncedSearch = useDebouncedValue(search.trim(), 500);
 
   const favoriteParams = useMemo(
     () => ({
@@ -80,7 +85,8 @@ export function FavoritesPageClient() {
       query: {
         enabled: Boolean(session?.user),
         placeholderData: keepPreviousData,
-        staleTime: 30 * 1000,
+        staleTime: 60 * 1000,
+        gcTime: 5 * 60 * 1000,
       },
     },
   );
@@ -107,44 +113,7 @@ export function FavoritesPageClient() {
         <SiteHeader />
 
       <main className="flex-1">
-        <section className="relative flex min-h-96 items-center overflow-hidden border-b border-border/40">
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="/images/favorites-image.jpg"
-              alt="Receitas salvas em uma mesa"
-              fill
-              priority
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-linear-to-r from-black/85 via-black/60 to-black/25" />
-          </div>
-
-          <div className="container relative z-10 mx-auto px-4 py-16 text-white">
-            <Button
-              asChild
-              size="sm"
-              variant="outline"
-              className="mb-8 rounded-full border-white/30 bg-white/10 text-white backdrop-blur-md hover:bg-white/20 hover:text-white"
-            >
-              <Link href="/">
-                <ArrowLeft data-icon="inline-start" />
-                Voltar para home
-              </Link>
-            </Button>
-
-            <div className="flex max-w-3xl flex-col gap-4">
-              <h1 className="flex flex-wrap items-center gap-3 font-heading text-4xl font-bold tracking-tight md:text-6xl">
-                <span className="flex size-12 items-center justify-center rounded-2xl bg-white/15 text-white backdrop-blur-md md:size-14">
-                  <Heart className="h-6 w-6 fill-current md:h-7 md:w-7" />
-                </span>
-                Os meus favoritos
-              </h1>
-              <p className="max-w-2xl text-lg leading-relaxed text-white/85">
-                As receitas que você salvou ficam aqui para voltar rápido quando for cozinhar.
-              </p>
-            </div>
-          </div>
-        </section>
+        <FavoritesHero />
 
         <section className="container mx-auto px-4 py-10 md:py-14">
           {isSessionPending ? (
@@ -154,19 +123,7 @@ export function FavoritesPageClient() {
               ))}
             </div>
           ) : !session?.user ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed bg-muted/20 px-6 py-20 text-center">
-              <div className="mb-5 flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <LogIn className="h-6 w-6" />
-              </div>
-              <h2 className="font-heading text-2xl font-bold">Entre para ver seus favoritos</h2>
-              <p className="mt-2 max-w-md text-muted-foreground">
-                Seus favoritos são vinculados à sua conta. Faça login para carregar as receitas salvas.
-              </p>
-              <Button className="mt-6 rounded-full" onClick={() => setIsAuthOpen(true)}>
-                <LogIn data-icon="inline-start" />
-                Entrar
-              </Button>
-            </div>
+            <FavoritesAuthPrompt onLoginClick={() => setIsAuthOpen(true)} />
           ) : (
             <div className="flex flex-col gap-8">
               <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-end">
@@ -188,10 +145,10 @@ export function FavoritesPageClient() {
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <Input
-                              {...field}
-                              onChange={(event) => {
-                                field.onChange(event);
+                            <DebouncedSearchInput
+                              value={field.value ?? ""}
+                              onChange={(val) => {
+                                field.onChange(val);
                                 resetPage();
                               }}
                               placeholder="Buscar nos favoritos"
@@ -249,24 +206,7 @@ export function FavoritesPageClient() {
                   ))}
                 </div>
               ) : recipes.length === 0 ? (
-                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed bg-muted/20 px-6 py-20 text-center">
-                  <div className="mb-5 flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <Heart className="h-6 w-6" />
-                  </div>
-                  <h2 className="font-heading text-2xl font-bold">
-                    {debouncedSearch ? "Nenhum favorito encontrado" : "Nenhuma receita favoritada"}
-                  </h2>
-                  <p className="mt-2 max-w-md text-muted-foreground">
-                    {debouncedSearch
-                      ? "Tente buscar por outro nome ou descrição da receita."
-                      : "Explore as receitas e toque no coração para montar sua lista."}
-                  </p>
-                  {!debouncedSearch && (
-                    <Button asChild className="mt-6 rounded-full">
-                      <Link href="/receitas">Explorar receitas</Link>
-                    </Button>
-                  )}
-                </div>
+                <FavoritesEmptyState debouncedSearch={debouncedSearch} />
               ) : (
                 <>
                   {isUpdating && (
