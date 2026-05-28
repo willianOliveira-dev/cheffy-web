@@ -5,23 +5,22 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Search, SlidersHorizontal } from "lucide-react";
 import { useGetRecipes } from "@/api/generated/recipes/recipes";
 import { GetRecipesDifficulty, GetRecipesOrderBy } from "@/api/generated/model";
 import { SearchFormValues, searchSchema } from "@/lib/schemas/search";
 import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
 import { cn } from "@/lib/utils";
 
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Form } from "@/components/ui/form";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 import { SearchFilters } from "./search-filters";
+import { SearchHeader } from "./search-header";
+import { SearchEmptyState } from "./search-empty-state";
 import { RecipeCard } from "@/components/shared/recipe-card";
 import { RecipeCardSkeleton } from "@/components/shared/recipe-card-skeleton";
+
+
 
 const SEARCH_PAGE_SIZE = 12;
 
@@ -54,8 +53,8 @@ export function SearchPageClient() {
   const orderBy = useWatch({ control: form.control, name: "orderBy" }) || GetRecipesOrderBy.newest;
   const page = useWatch({ control: form.control, name: "page" }) || 1;
 
-  const debouncedSearch = useDebouncedValue(searchValue.trim(), 350);
-  const debouncedMaxTotalTime = useDebouncedValue(maxTotalTime, 250);
+  const debouncedSearch = useDebouncedValue(searchValue.trim(), 500);
+  const debouncedMaxTotalTime = useDebouncedValue(maxTotalTime, 400);
 
   const filterResetKey = useMemo(
     () => [searchValue, categoryId, tagId, difficulty ?? "", maxTotalTime ?? "", orderBy].join("|"),
@@ -108,7 +107,8 @@ export function SearchPageClient() {
   const { data, isLoading, isFetching, isError } = useGetRecipes(recipeParams, {
     query: {
       placeholderData: keepPreviousData,
-      staleTime: 30 * 1000,
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
     },
   });
 
@@ -137,77 +137,12 @@ export function SearchPageClient() {
           </aside>
 
           <main className="flex-1">
-            <div className="mb-6 flex flex-col items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 shadow-sm sm:flex-row">
-              <div className="flex w-full flex-1 gap-2">
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="icon" className="shrink-0 md:hidden">
-                      <SlidersHorizontal className="h-4 w-4" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="left" className="h-dvh w-[300px] overflow-hidden sm:w-[400px]">
-                    <SheetHeader className="shrink-0">
-                      <SheetTitle>Filtros</SheetTitle>
-                    </SheetHeader>
-                    <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
-                      <SearchFilters />
-                    </div>
-                  </SheetContent>
-                </Sheet>
-
-                <FormField
-                  control={form.control}
-                  name="search"
-                  render={({ field }) => (
-                    <FormItem className="w-full flex-1">
-                      <FormControl>
-                        <div className="relative">
-                          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                          <Input
-                            placeholder="Buscar receitas pelo nome..."
-                            className="w-full bg-background pl-9"
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="orderBy"
-                render={({ field }) => (
-                  <FormItem className="w-full shrink-0 sm:w-auto">
-                    <FormControl>
-                      <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger className="w-full bg-background sm:w-[180px]">
-                          <SelectValue placeholder="Ordenar por" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value={GetRecipesOrderBy.newest}>Mais recentes</SelectItem>
-                          <SelectItem value={GetRecipesOrderBy.oldest}>Mais antigas</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <h3 className="font-medium text-muted-foreground">
-                {isInitialLoading ? (
-                  "Buscando receitas..."
-                ) : (
-                  <>{meta?.totalItems || 0} receitas encontradas</>
-                )}
-              </h3>
-              {isUpdating && (
-                <span className="text-xs font-medium text-muted-foreground">Atualizando resultados...</span>
-              )}
-            </div>
+            <SearchHeader
+              form={form}
+              isInitialLoading={isInitialLoading}
+              isUpdating={isUpdating}
+              totalItems={meta?.totalItems || 0}
+            />
 
             {isInitialLoading ? (
               <RecipeGridSkeleton />
@@ -216,32 +151,19 @@ export function SearchPageClient() {
                 Ocorreu um erro ao carregar as receitas. Tente novamente.
               </div>
             ) : recipes.length === 0 ? (
-              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/20 py-24 text-center">
-                <div className="mb-4 rounded-full bg-muted p-4">
-                  <Search className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="mb-2 font-heading text-xl font-bold">Nenhuma receita encontrada</h3>
-                <p className="max-w-md text-muted-foreground">
-                  Não encontramos nenhuma receita com os filtros selecionados. Tente usar termos mais genéricos ou remover alguns filtros.
-                </p>
-                <Button
-                  variant="outline"
-                  className="mt-6"
-                  onClick={() => {
-                    form.reset({
-                      search: "",
-                      categoryId: "",
-                      tagId: "",
-                      difficulty: undefined,
-                      maxTotalTime: undefined,
-                      orderBy: GetRecipesOrderBy.newest,
-                      page: 1,
-                    });
-                  }}
-                >
-                  Limpar todos os filtros
-                </Button>
-              </div>
+              <SearchEmptyState
+                onClearFilters={() => {
+                  form.reset({
+                    search: "",
+                    categoryId: "",
+                    tagId: "",
+                    difficulty: undefined,
+                    maxTotalTime: undefined,
+                    orderBy: GetRecipesOrderBy.newest,
+                    page: 1,
+                  });
+                }}
+              />
             ) : (
               <div className={cn("flex flex-col gap-8 transition-opacity", isUpdating && "opacity-70")}>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
