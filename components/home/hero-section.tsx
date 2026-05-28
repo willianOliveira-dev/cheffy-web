@@ -33,7 +33,12 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row">
-            <Button asChild size="lg" className="rounded-full bg-white text-orange-600 hover:bg-white/90 text-base h-12 px-8 font-semibold shadow-lg">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-12 rounded-full border-transparent bg-white px-8 text-base font-semibold text-orange-600 shadow-lg hover:bg-white hover:text-orange-600"
+            >
               <Link href="/receitas">Explorar Receitas</Link>
             </Button>
             <Button

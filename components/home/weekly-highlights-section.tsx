@@ -19,7 +19,7 @@ export function WeeklyHighlightsSection({ highlights }: { highlights: RecipeSumm
   if (!highlights?.length) return null;
 
   return (
-    <section className="container mx-auto px-4 py-24">
+    <section id="destaques" className="container mx-auto px-4 py-24">
       <div className="mb-12 flex items-end justify-between">
         <SectionTitle>Destaques da Semana</SectionTitle>
       </div>
