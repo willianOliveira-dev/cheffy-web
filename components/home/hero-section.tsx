@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ShareCheffyButton } from "./share-cheffy-button";
 
 export function HeroSection() {
   return (
@@ -41,13 +42,7 @@ export function HeroSection() {
             >
               <Link href="/receitas">Explorar Receitas</Link>
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="rounded-full text-base h-12 px-8 font-semibold bg-transparent text-white border-white/30 hover:bg-white/10 hover:text-white"
-            >
-              Compartilhar Receita
-            </Button>
+            <ShareCheffyButton />
           </div>
         </div>
       </div>

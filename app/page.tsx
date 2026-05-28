@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/home/hero-section";
 import { FavoriteFlavorsSection } from "@/components/home/favorite-flavors-section";
 import { CheffyBenefitsSection } from "@/components/home/cheffy-benefits-section";
 import { HomeDynamicSections } from "@/components/home/home-dynamic-sections";
+import { CookWithCheffySection } from "@/components/home/cook-with-cheffy-section";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         <FavoriteFlavorsSection />
         <CheffyBenefitsSection />
         <HomeDynamicSections />
+        <CookWithCheffySection />
       </main>
       <SiteFooter />
     </div>
