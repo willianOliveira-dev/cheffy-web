@@ -27,7 +27,6 @@ type CategoryPageClientProps = {
 const PAGE_SIZE = 12;
 
 
-
 export function CategoryPageClient({ slug }: CategoryPageClientProps) {
   const [page, setPage] = useState(1);
   const {
@@ -77,9 +76,9 @@ export function CategoryPageClient({ slug }: CategoryPageClientProps) {
       <SiteHeader />
 
       <main>
-        <CategoryHero 
-          category={category ?? null} 
-          isLoadingCategory={isLoadingCategory} 
+        <CategoryHero
+          category={category ?? null}
+          isLoadingCategory={isLoadingCategory}
         />
 
         <section className="container mx-auto px-4 py-10 md:py-14">

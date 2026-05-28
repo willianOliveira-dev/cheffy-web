@@ -41,7 +41,7 @@ export function ChatMessages({
     <ScrollArea
       className={cn(
         "min-w-0 rounded-xl bg-muted/30",
-        isFullscreen ? "min-h-0 flex-1 rounded-none border-y" : "h-[28rem]",
+        isFullscreen ? "min-h-0 flex-1 rounded-none border-y" : "h-112",
       )}
     >
       <div className="flex min-w-0 max-w-full flex-col gap-3 overflow-hidden p-3">
@@ -64,7 +64,7 @@ export function ChatMessages({
 
               <div
                 className={cn(
-                  "min-w-0 max-w-[calc(100%_-_2.75rem)] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm sm:max-w-[78%]",
+                  "min-w-0 max-w-[calc(100%-2.75rem)] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm sm:max-w-[78%]",
                   isUser
                     ? "rounded-br-md bg-primary text-primary-foreground"
                     : "rounded-bl-md border border-border/70 bg-background text-foreground",

@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef } from "react";
-import type { Recipe } from "@/api/generated/model";
+import type { Recipe, RecipeNutritionLabel } from "@/api/generated/model";
 import {
   formatDifficulty,
   formatMinutes,

@@ -36,7 +36,6 @@ import { DebouncedSearchInput } from "@/components/shared/debounced-input";
 
 const FAVORITES_PAGE_SIZE = 10;
 
-
 type FavoriteSearchFormValues = {
   search: string;
   orderBy: GetMyFavoriteRecipesOrderBy;
@@ -107,176 +106,176 @@ export function FavoritesPageClient() {
       <div className="flex min-h-screen flex-col bg-background">
         <SiteHeader />
 
-      <main className="flex-1">
-        <FavoritesHero />
+        <main className="flex-1">
+          <FavoritesHero />
 
-        <section className="container mx-auto px-4 py-10 md:py-14">
-          {isSessionPending ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {Array.from({ length: FAVORITES_PAGE_SIZE }).map((_, index) => (
-                <RecipeCardSkeleton key={index} />
-              ))}
-            </div>
-          ) : !session?.user ? (
-            <FavoritesAuthPrompt onLoginClick={() => setIsAuthOpen(true)} />
-          ) : (
-            <div className="flex flex-col gap-8">
-              <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-end">
-                <div>
-                  <h2 className="font-heading text-3xl font-bold tracking-tight">Receitas salvas</h2>
-                  <p className="mt-2 text-muted-foreground">
-                    {isInitialLoading
-                      ? "Buscando favoritos..."
-                      : `${meta?.totalItems ?? 0} receitas encontradas nos seus favoritos.`}
-                  </p>
-                </div>
+          <section className="container mx-auto px-4 py-10 md:py-14">
+            {isSessionPending ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {Array.from({ length: FAVORITES_PAGE_SIZE }).map((_, index) => (
+                  <RecipeCardSkeleton key={index} />
+                ))}
+              </div>
+            ) : !session?.user ? (
+              <FavoritesAuthPrompt onLoginClick={() => setIsAuthOpen(true)} />
+            ) : (
+              <div className="flex flex-col gap-8">
+                <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-end">
+                  <div>
+                    <h2 className="font-heading text-3xl font-bold tracking-tight">Receitas salvas</h2>
+                    <p className="mt-2 text-muted-foreground">
+                      {isInitialLoading
+                        ? "Buscando favoritos..."
+                        : `${meta?.totalItems ?? 0} receitas encontradas nos seus favoritos.`}
+                    </p>
+                  </div>
 
-                <div className="grid gap-3 sm:grid-cols-[minmax(16rem,1fr)_11rem] md:w-lg">
-                  <div className="relative">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <div className="grid gap-3 sm:grid-cols-[minmax(16rem,1fr)_11rem] md:w-lg">
+                    <div className="relative">
+                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <FormField
+                        control={form.control}
+                        name="search"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <DebouncedSearchInput
+                                value={field.value ?? ""}
+                                onChange={(val) => {
+                                  field.onChange(val);
+                                  resetPage();
+                                }}
+                                placeholder="Buscar nos favoritos"
+                                className="h-10 rounded-full pl-9"
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
                     <FormField
                       control={form.control}
-                      name="search"
+                      name="orderBy"
                       render={({ field }) => (
                         <FormItem>
-                          <FormControl>
-                            <DebouncedSearchInput
-                              value={field.value ?? ""}
-                              onChange={(val) => {
-                                field.onChange(val);
-                                resetPage();
-                              }}
-                              placeholder="Buscar nos favoritos"
-                              className="h-10 rounded-full pl-9"
-                            />
-                          </FormControl>
+                          <Select
+                            value={field.value}
+                            onValueChange={(value) => {
+                              if (
+                                value !== GetMyFavoriteRecipesOrderBy.newest &&
+                                value !== GetMyFavoriteRecipesOrderBy.oldest
+                              ) {
+                                return;
+                              }
+
+                              field.onChange(value);
+                              resetPage();
+                            }}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="h-10 w-full rounded-full">
+                                <SelectValue placeholder="Ordenar" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value={GetMyFavoriteRecipesOrderBy.newest}>Mais recentes</SelectItem>
+                              <SelectItem value={GetMyFavoriteRecipesOrderBy.oldest}>Mais antigos</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </FormItem>
                       )}
                     />
                   </div>
-
-                  <FormField
-                    control={form.control}
-                    name="orderBy"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Select
-                          value={field.value}
-                          onValueChange={(value) => {
-                            if (
-                              value !== GetMyFavoriteRecipesOrderBy.newest &&
-                              value !== GetMyFavoriteRecipesOrderBy.oldest
-                            ) {
-                              return;
-                            }
-
-                            field.onChange(value);
-                            resetPage();
-                          }}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="h-10 w-full rounded-full">
-                              <SelectValue placeholder="Ordenar" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value={GetMyFavoriteRecipesOrderBy.newest}>Mais recentes</SelectItem>
-                            <SelectItem value={GetMyFavoriteRecipesOrderBy.oldest}>Mais antigos</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormItem>
-                    )}
-                  />
                 </div>
-              </div>
 
-              {isError ? (
-                <div className="rounded-2xl border border-dashed bg-muted/20 px-6 py-20 text-center text-muted-foreground">
-                  Não foi possível carregar seus favoritos agora. Tente novamente em instantes.
-                </div>
-              ) : isInitialLoading ? (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {Array.from({ length: FAVORITES_PAGE_SIZE }).map((_, index) => (
-                    <RecipeCardSkeleton key={index} />
-                  ))}
-                </div>
-              ) : recipes.length === 0 ? (
-                <FavoritesEmptyState debouncedSearch={debouncedSearch} />
-              ) : (
-                <>
-                  {isUpdating && (
-                    <p className="-mt-3 text-sm text-muted-foreground">Atualizando favoritos...</p>
-                  )}
-                  <div className={cn("grid grid-cols-1 gap-6 transition-opacity sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4", isUpdating && "opacity-70")}>
-                    {recipes.map((recipe) => (
-                      <RecipeCard key={recipe.id} recipe={recipe} showViews />
+                {isError ? (
+                  <div className="rounded-2xl border border-dashed bg-muted/20 px-6 py-20 text-center text-muted-foreground">
+                    Não foi possível carregar seus favoritos agora. Tente novamente em instantes.
+                  </div>
+                ) : isInitialLoading ? (
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {Array.from({ length: FAVORITES_PAGE_SIZE }).map((_, index) => (
+                      <RecipeCardSkeleton key={index} />
                     ))}
                   </div>
+                ) : recipes.length === 0 ? (
+                  <FavoritesEmptyState debouncedSearch={debouncedSearch} />
+                ) : (
+                  <>
+                    {isUpdating && (
+                      <p className="-mt-3 text-sm text-muted-foreground">Atualizando favoritos...</p>
+                    )}
+                    <div className={cn("grid grid-cols-1 gap-6 transition-opacity sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4", isUpdating && "opacity-70")}>
+                      {recipes.map((recipe) => (
+                        <RecipeCard key={recipe.id} recipe={recipe} showViews />
+                      ))}
+                    </div>
 
-                  {meta && meta.totalPages > 1 && (
-                    <Pagination>
-                      <PaginationContent>
-                        <PaginationItem>
-                          <PaginationPrevious
-                            text="Anterior"
-                            href="#"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              if (meta.hasPrevious) handlePageChange(meta.page - 1);
-                            }}
-                            className={!meta.hasPrevious ? "pointer-events-none opacity-50" : ""}
-                          />
-                        </PaginationItem>
+                    {meta && meta.totalPages > 1 && (
+                      <Pagination>
+                        <PaginationContent>
+                          <PaginationItem>
+                            <PaginationPrevious
+                              text="Anterior"
+                              href="#"
+                              onClick={(event) => {
+                                event.preventDefault();
+                                if (meta.hasPrevious) handlePageChange(meta.page - 1);
+                              }}
+                              className={!meta.hasPrevious ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
 
-                        {Array.from({ length: meta.totalPages }).map((_, index) => {
-                          const pageNumber = index + 1;
+                          {Array.from({ length: meta.totalPages }).map((_, index) => {
+                            const pageNumber = index + 1;
 
-                          if (
-                            pageNumber === 1 ||
-                            pageNumber === meta.totalPages ||
-                            (pageNumber >= meta.page - 1 && pageNumber <= meta.page + 1)
-                          ) {
-                            return (
-                              <PaginationItem key={pageNumber}>
-                                <PaginationLink
-                                  href="#"
-                                  isActive={pageNumber === meta.page}
-                                  onClick={(event) => {
-                                    event.preventDefault();
-                                    handlePageChange(pageNumber);
-                                  }}
-                                >
-                                  {pageNumber}
-                                </PaginationLink>
-                              </PaginationItem>
-                            );
-                          }
+                            if (
+                              pageNumber === 1 ||
+                              pageNumber === meta.totalPages ||
+                              (pageNumber >= meta.page - 1 && pageNumber <= meta.page + 1)
+                            ) {
+                              return (
+                                <PaginationItem key={pageNumber}>
+                                  <PaginationLink
+                                    href="#"
+                                    isActive={pageNumber === meta.page}
+                                    onClick={(event) => {
+                                      event.preventDefault();
+                                      handlePageChange(pageNumber);
+                                    }}
+                                  >
+                                    {pageNumber}
+                                  </PaginationLink>
+                                </PaginationItem>
+                              );
+                            }
 
-                          return null;
-                        })}
+                            return null;
+                          })}
 
-                        <PaginationItem>
-                          <PaginationNext
-                            text="Próximo"
-                            href="#"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              if (meta.hasNext) handlePageChange(meta.page + 1);
-                            }}
-                            className={!meta.hasNext ? "pointer-events-none opacity-50" : ""}
-                          />
-                        </PaginationItem>
-                      </PaginationContent>
-                    </Pagination>
-                  )}
-                </>
-              )}
-            </div>
-          )}
-        </section>
-      </main>
+                          <PaginationItem>
+                            <PaginationNext
+                              text="Próximo"
+                              href="#"
+                              onClick={(event) => {
+                                event.preventDefault();
+                                if (meta.hasNext) handlePageChange(meta.page + 1);
+                              }}
+                              className={!meta.hasNext ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
+                        </PaginationContent>
+                      </Pagination>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </section>
+        </main>
 
-      <SiteFooter />
+        <SiteFooter />
 
         <AuthDialog open={isAuthOpen} onOpenChange={setIsAuthOpen} />
       </div>

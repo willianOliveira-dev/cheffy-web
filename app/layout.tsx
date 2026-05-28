@@ -3,6 +3,7 @@ import { Montserrat, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { ServerWakeGate } from "@/components/providers/server-wake-gate";
 
 const ebGaramondHeading = EB_Garamond({subsets:['latin'],variable:'--font-heading'});
 
@@ -27,7 +28,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <QueryProvider>
-          {children}
+          <ServerWakeGate>{children}</ServerWakeGate>
           <Toaster />
         </QueryProvider>
       </body>
