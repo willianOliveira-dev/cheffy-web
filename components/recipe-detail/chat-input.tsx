@@ -1,5 +1,5 @@
 import type { KeyboardEvent } from "react";
-import { Send } from "lucide-react";
+import { MessageSquareText, Send } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-type MeasurePreference = "grams" | "grams-and-cups";
+type MeasurePreference = "grams" | "grams-and-cups" | "cups";
 
 type AiChatFormValues = {
   message: string;
@@ -27,6 +33,8 @@ type ChatInputProps = {
   handleTextareaKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
   isStreaming: boolean;
   message: string;
+  areSuggestionsVisible?: boolean;
+  toggleSuggestionsVisibility?: () => void;
 };
 
 export function ChatInput({
@@ -36,6 +44,8 @@ export function ChatInput({
   handleTextareaKeyDown,
   isStreaming,
   message,
+  areSuggestionsVisible = false,
+  toggleSuggestionsVisibility,
 }: ChatInputProps) {
   return (
     <form
@@ -69,37 +79,68 @@ export function ChatInput({
             isFullscreen ? "flex-row items-center justify-between" : "flex-col sm:flex-row sm:items-center sm:justify-between",
           )}
         >
-          <FormField
-            control={form.control}
-            name="measurePreference"
-            render={({ field }) => (
-              <FormItem>
-                <Select
-                  value={field.value}
-                  onValueChange={(value) => {
-                    if (value === "grams" || value === "grams-and-cups") {
-                      field.onChange(value);
-                    }
-                  }}
-                >
-                  <FormControl>
-                    <SelectTrigger
-                      className={cn(
-                        "h-9 rounded-full border-border/70 bg-background px-3 text-xs shadow-none",
-                        isFullscreen ? "w-[9.5rem]" : "w-full sm:w-[180px]",
-                      )}
+          <div className="flex min-w-0 items-center gap-2">
+            <FormField
+              control={form.control}
+              name="measurePreference"
+              render={({ field }) => (
+                <FormItem className="min-w-0">
+                  <Select
+                    value={field.value}
+                    onValueChange={(value) => {
+                      if (value === "grams" || value === "grams-and-cups" || value === "cups") {
+                        field.onChange(value);
+                      }
+                    }}
+                  >
+                    <FormControl>
+                      <SelectTrigger
+                        className={cn(
+                          "h-9 rounded-full border-border/70 bg-background px-3 text-xs shadow-none",
+                          isFullscreen ? "w-39" : "w-full sm:w-47.5",
+                        )}
+                      >
+                        <SelectValue placeholder="Medidas" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="grams">Apenas gramas</SelectItem>
+                      <SelectItem value="grams-and-cups">Gramas e xícaras</SelectItem>
+                      <SelectItem value="cups">Apenas xícaras</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+
+            {toggleSuggestionsVisibility && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant={areSuggestionsVisible ? "secondary" : "outline"}
+                      className="rounded-full"
+                      aria-label={
+                        areSuggestionsVisible
+                          ? "Ocultar atalhos de conversa"
+                          : "Mostrar atalhos de conversa"
+                      }
+                      onClick={toggleSuggestionsVisibility}
                     >
-                      <SelectValue placeholder="Medidas" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="grams">Apenas Gramas</SelectItem>
-                    <SelectItem value="grams-and-cups">Gramas e Xícaras</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormItem>
+                      <MessageSquareText data-icon="inline-start" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    {areSuggestionsVisible
+                      ? "Ocultar atalhos de conversa"
+                      : "Mostrar atalhos de conversa"}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
-          />
+          </div>
 
           <Button
             type="submit"

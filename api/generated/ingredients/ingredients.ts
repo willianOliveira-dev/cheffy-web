@@ -26,14 +26,12 @@ import type {
 
 import type {
   CreateIngredientBody,
-  GetIngredientNutrition200,
   GetIngredientsParams,
   Ingredient,
+  IngredientNutrition,
   PaginatedIngredientList,
   UpdateIngredientBody,
-  UpdateIngredientNutrition200,
   UpdateIngredientNutritionBody,
-  UpsertIngredientNutrition200,
   UpsertIngredientNutritionBody
 } from '../model';
 
@@ -394,7 +392,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 ) => {
 
 
-      return customInstance<GetIngredientNutrition200>(
+      return customInstance<IngredientNutrition>(
       {url: `/api/v1/ingredients/${id}/nutrition`, method: 'GET', signal
     },
       options);
@@ -481,7 +479,7 @@ export const upsertIngredientNutrition = (
 ) => {
 
 
-      return customInstance<UpsertIngredientNutrition200>(
+      return customInstance<IngredientNutrition>(
       {url: `/api/v1/ingredients/${id}/nutrition`, method: 'PUT',
       headers: {'Content-Type': 'application/json', },
       data: upsertIngredientNutritionBody, signal
@@ -539,7 +537,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 ) => {
 
 
-      return customInstance<UpdateIngredientNutrition200>(
+      return customInstance<IngredientNutrition>(
       {url: `/api/v1/ingredients/${id}/nutrition`, method: 'PATCH',
       headers: {'Content-Type': 'application/json', },
       data: updateIngredientNutritionBody, signal

@@ -6,7 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export interface IngredientNutrition {
+/**
+ * @nullable
+ */
+export type IngredientNutritionProperty = {
   id: string;
   ingredientId: string;
   energyKcalPer100g: number;
@@ -27,4 +30,4 @@ export interface IngredientNutrition {
   sodiumMgPer100g: number | null;
   /** @nullable */
   source: string | null;
-}
+} | null;

@@ -17,13 +17,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export function SearchFilters() {
   const { data: categoriesData, isLoading: loadingCategories } = useGetCategories({ limit: 100 });
   const { data: tagsData, isLoading: loadingTags } = useGetTags({ limit: 100 });
+  const dynamicAccordionContentClassName = "h-auto pb-4";
+  const listScrollClassName = "h-80 pr-3 md:h-96";
+  const optionItemClassName = "flex min-h-9 items-center gap-3";
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <Accordion type="multiple" defaultValue={["category", "difficulty", "time", "tag"]} className="w-full">
         <AccordionItem value="category">
           <AccordionTrigger className="text-base font-semibold">Categoria</AccordionTrigger>
-          <AccordionContent>
+          <AccordionContent className={dynamicAccordionContentClassName}>
             {loadingCategories ? (
               <div className="space-y-3 pt-2">
                 <Skeleton className="h-4 w-3/4" />
@@ -31,18 +34,18 @@ export function SearchFilters() {
                 <Skeleton className="h-4 w-2/3" />
               </div>
             ) : (
-              <ScrollArea className="h-52 md:h-60 pr-3">
+              <ScrollArea className={listScrollClassName}>
                 <FormField
                   name="categoryId"
                   render={({ field }) => (
-                    <FormItem className="space-y-3">
+                    <FormItem>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
                           value={field.value || ""}
-                          className="flex flex-col space-y-2 pb-6"
+                          className="flex flex-col gap-2.5 pb-6 pt-1"
                         >
-                          <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormItem className={optionItemClassName}>
                             <FormControl>
                               <RadioGroupItem value="" />
                             </FormControl>
@@ -51,7 +54,7 @@ export function SearchFilters() {
                             </FormLabel>
                           </FormItem>
                           {categoriesData?.data?.map((category) => (
-                            <FormItem key={category.id} className="flex items-center space-x-3 space-y-0">
+                            <FormItem key={category.id} className={optionItemClassName}>
                               <FormControl>
                                 <RadioGroupItem value={category.id} />
                               </FormControl>
@@ -145,25 +148,25 @@ export function SearchFilters() {
 
         <AccordionItem value="tag">
           <AccordionTrigger className="text-base font-semibold">Tags</AccordionTrigger>
-          <AccordionContent>
+          <AccordionContent className={dynamicAccordionContentClassName}>
             {loadingTags ? (
               <div className="space-y-3 pt-2">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
               </div>
             ) : (
-              <ScrollArea className="h-52 md:h-60 pr-3">
+              <ScrollArea className={listScrollClassName}>
                 <FormField
                   name="tagId"
                   render={({ field }) => (
-                    <FormItem className="space-y-3">
+                    <FormItem>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
                           value={field.value || ""}
-                          className="flex flex-col space-y-2 pb-6"
+                          className="flex flex-col gap-2.5 pb-6 pt-1"
                         >
-                          <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormItem className={optionItemClassName}>
                             <FormControl>
                               <RadioGroupItem value="" />
                             </FormControl>
@@ -172,7 +175,7 @@ export function SearchFilters() {
                             </FormLabel>
                           </FormItem>
                           {tagsData?.data?.map((tag) => (
-                            <FormItem key={tag.id} className="flex items-center space-x-3 space-y-0">
+                            <FormItem key={tag.id} className={optionItemClassName}>
                               <FormControl>
                                 <RadioGroupItem value={tag.id} />
                               </FormControl>

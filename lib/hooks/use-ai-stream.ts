@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 
 type AiStreamRequestData = {
   message: string;
-  measurePreference: "grams" | "grams-and-cups";
+  measurePreference: "grams" | "grams-and-cups" | "cups";
 };
 
 type AiStreamCallbacks = {

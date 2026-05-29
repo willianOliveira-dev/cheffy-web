@@ -12,4 +12,5 @@ export type AskRecipeAssistantBodyMeasurePreference = typeof AskRecipeAssistantB
 export const AskRecipeAssistantBodyMeasurePreference = {
   grams: 'grams',
   'grams-and-cups': 'grams-and-cups',
+  cups: 'cups',
 } as const;

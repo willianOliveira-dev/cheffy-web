@@ -39,5 +39,5 @@ export interface Recipe {
   tags?: RecipeTagsItem[];
   sections?: RecipeSection[];
   /** @nullable */
-  nutritionLabel?: RecipeNutritionLabel | null;
+  nutritionLabel?: RecipeNutritionLabel;
 }

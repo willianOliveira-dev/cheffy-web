@@ -130,7 +130,7 @@ export function SearchPageClient() {
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="flex flex-col gap-8 md:flex-row">
           <aside className="hidden w-72 shrink-0 md:block">
-            <div className="sticky top-24 flex flex-col gap-6">
+            <div className="sticky top-6 flex max-h-[calc(100dvh-2.5rem)] flex-col gap-6 overflow-y-auto pr-2">
               <div>
                 <h2 className="mb-2 font-heading text-2xl font-bold tracking-tight">Filtros</h2>
                 <p className="text-sm text-muted-foreground">Refine sua busca para encontrar a receita perfeita.</p>

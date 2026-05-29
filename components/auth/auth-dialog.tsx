@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { authClient } from "@/lib/auth-client";
+import { buildAuthRedirectURL } from "@/lib/auth-redirect-url";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,9 +33,13 @@ export function AuthDialog({
     setIsSigningIn(true);
 
     try {
+      const redirectURL = buildAuthRedirectURL();
+
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: window.location.href,
+        callbackURL: redirectURL,
+        errorCallbackURL: redirectURL,
+        newUserCallbackURL: redirectURL,
       });
     } finally {
       setIsSigningIn(false);

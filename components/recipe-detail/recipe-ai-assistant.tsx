@@ -34,7 +34,7 @@ type RecipeAiAssistantProps = {
 
 
 
-type MeasurePreference = "grams" | "grams-and-cups";
+type MeasurePreference = "grams" | "grams-and-cups" | "cups";
 
 type AiChatFormValues = {
   message: string;
@@ -46,7 +46,8 @@ type AiChatFormValues = {
 export function RecipeAiAssistant({ recipe }: RecipeAiAssistantProps) {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
-  const [areSuggestionsVisible, setAreSuggestionsVisible] = useState(true);
+  const [areDesktopSuggestionsVisible, setAreDesktopSuggestionsVisible] = useState(true);
+  const [areMobileSuggestionsVisible, setAreMobileSuggestionsVisible] = useState(false);
   const isMobileViewport = useMediaQuery("(max-width: 767px)");
   const { data: session } = authClient.useSession();
   const form = useForm<AiChatFormValues>({
@@ -125,48 +126,60 @@ export function RecipeAiAssistant({ recipe }: RecipeAiAssistantProps) {
     event.preventDefault();
     sendMessage(form.getValues("message"));
   };
-  const toggleSuggestionsVisibility = () => {
-    setAreSuggestionsVisible((prev) => !prev);
+  const renderAssistantContent = (isFullscreen = false) => {
+    const areSuggestionsVisible = isFullscreen
+      ? areMobileSuggestionsVisible
+      : areDesktopSuggestionsVisible;
+
+    const toggleSuggestionsVisibility = () => {
+      if (isFullscreen) {
+        setAreMobileSuggestionsVisible((prev) => !prev);
+        return;
+      }
+
+      setAreDesktopSuggestionsVisible((prev) => !prev);
+    };
+
+    return (
+      <div className={cn("flex min-w-0 flex-col gap-4", isFullscreen && "min-h-0 flex-1 gap-3 overflow-hidden")}>
+        <ChatMessages
+          isFullscreen={isFullscreen}
+          messages={messages}
+          isStreaming={isStreaming}
+          streamedContent={streamedContent}
+          session={session ?? null}
+        />
+
+        {streamError && (
+          <div className={cn(isFullscreen && "shrink-0 px-4")}>
+            <Alert variant="destructive">
+              <AlertTitle>Erro ao consultar o assistente</AlertTitle>
+              <AlertDescription>
+                {streamError || "Tente novamente em alguns instantes."}
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+
+        <ChatSuggestions
+          isFullscreen={isFullscreen}
+          areSuggestionsVisible={areSuggestionsVisible}
+          sendMessage={sendMessage}
+        />
+        
+        <ChatInput
+          isFullscreen={isFullscreen}
+          form={form}
+          handleSubmit={handleSubmit}
+          handleTextareaKeyDown={handleTextareaKeyDown}
+          isStreaming={isStreaming}
+          message={message}
+          areSuggestionsVisible={areSuggestionsVisible}
+          toggleSuggestionsVisibility={toggleSuggestionsVisibility}
+        />
+      </div>
+    );
   };
-
-  const renderAssistantContent = (isFullscreen = false) => (
-    <div className={cn("flex min-w-0 flex-col gap-4", isFullscreen && "min-h-0 flex-1 overflow-hidden py-3")}>
-      <ChatMessages
-        isFullscreen={isFullscreen}
-        messages={messages}
-        isStreaming={isStreaming}
-        streamedContent={streamedContent}
-        session={session ?? null}
-      />
-
-      {streamError && (
-        <div className={cn(isFullscreen && "shrink-0 px-4")}>
-          <Alert variant="destructive">
-            <AlertTitle>Erro ao consultar o assistente</AlertTitle>
-            <AlertDescription>
-              {streamError || "Tente novamente em alguns instantes."}
-            </AlertDescription>
-          </Alert>
-        </div>
-      )}
-
-      <ChatSuggestions
-        isFullscreen={isFullscreen}
-        areSuggestionsVisible={areSuggestionsVisible}
-        toggleSuggestionsVisibility={toggleSuggestionsVisibility}
-        sendMessage={sendMessage}
-      />
-      
-      <ChatInput
-        isFullscreen={isFullscreen}
-        form={form}
-        handleSubmit={handleSubmit}
-        handleTextareaKeyDown={handleTextareaKeyDown}
-        isStreaming={isStreaming}
-        message={message}
-      />
-    </div>
-  );
 
   return (
     <Form {...form}>
@@ -222,7 +235,7 @@ export function RecipeAiAssistant({ recipe }: RecipeAiAssistantProps) {
 
           <DialogContent
             showCloseButton
-            className="inset-0 left-0 top-0 flex h-[100svh] max-h-[100svh] w-[100dvw] max-w-[100dvw] translate-x-0 translate-y-0 overflow-hidden rounded-none p-0 ring-0 sm:max-w-[100dvw] md:hidden"
+            className="!fixed !inset-0 !left-0 !top-0 !flex !h-dvh !max-h-dvh !w-dvw !max-w-none !translate-x-0 !translate-y-0 !gap-0 !overflow-hidden !rounded-none !p-0 !ring-0 md:hidden"
           >
             <DialogHeader className="sr-only">
               <DialogTitle>Assistente da receita</DialogTitle>
@@ -230,7 +243,7 @@ export function RecipeAiAssistant({ recipe }: RecipeAiAssistantProps) {
                 Chat em tela cheia para conversar com o assistente Cheffy sobre esta receita.
               </DialogDescription>
             </DialogHeader>
-            <div className="flex h-[100svh] w-[100dvw] min-w-0 max-w-[100dvw] flex-col overflow-hidden bg-background">
+            <div className="flex h-dvh w-dvw min-w-0 max-w-none flex-col overflow-hidden bg-background">
               <div className="flex shrink-0 items-center gap-3 border-b px-4 py-3 pr-12">
                 <Image
                   src="/images/cheffy-ai.svg"

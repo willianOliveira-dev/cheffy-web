@@ -46,7 +46,7 @@ export function SearchHeader({
                 <SlidersHorizontal className="h-4 w-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="h-dvh w-[300px] overflow-hidden sm:w-[400px]">
+            <SheetContent side="left" className="flex h-dvh w-[300px] flex-col overflow-hidden sm:w-[400px]">
               <SheetHeader className="shrink-0">
                 <SheetTitle>Filtros</SheetTitle>
               </SheetHeader>
@@ -63,12 +63,11 @@ export function SearchHeader({
               <FormItem className="w-full flex-1">
                 <FormControl>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       type="search"
                       enterKeyHint="search"
                       placeholder="Buscar receitas pelo nome..."
-                      className="w-full bg-background pl-9 pr-11"
+                      className="w-full bg-background pr-11"
                       value={field.value ?? ""}
                       onChange={field.onChange}
                       onKeyDown={(event) => {
