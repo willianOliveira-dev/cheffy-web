@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { keepPreviousData } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useGetRecipes } from "@/api/generated/recipes/recipes";
 import { GetRecipesDifficulty, GetRecipesOrderBy } from "@/api/generated/model";
 import { SearchFormValues, searchSchema } from "@/lib/schemas/search";
-import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
 import { cn } from "@/lib/utils";
 
 import { Form } from "@/components/ui/form";
@@ -45,20 +44,17 @@ export function SearchPageClient() {
     mode: "onChange",
   });
 
-  const searchValue = useWatch({ control: form.control, name: "search" }) || "";
   const categoryId = useWatch({ control: form.control, name: "categoryId" }) || "";
   const tagId = useWatch({ control: form.control, name: "tagId" }) || "";
   const difficulty = useWatch({ control: form.control, name: "difficulty" });
   const maxTotalTime = useWatch({ control: form.control, name: "maxTotalTime" });
   const orderBy = useWatch({ control: form.control, name: "orderBy" }) || GetRecipesOrderBy.newest;
   const page = useWatch({ control: form.control, name: "page" }) || 1;
-
-  const debouncedSearch = useDebouncedValue(searchValue.trim(), 500);
-  const debouncedMaxTotalTime = useDebouncedValue(maxTotalTime, 400);
+  const [submittedSearch, setSubmittedSearch] = useState((defaultValues.search ?? "").trim());
 
   const filterResetKey = useMemo(
-    () => [searchValue, categoryId, tagId, difficulty ?? "", maxTotalTime ?? "", orderBy].join("|"),
-    [categoryId, difficulty, maxTotalTime, orderBy, searchValue, tagId],
+    () => [categoryId, tagId, difficulty ?? "", maxTotalTime ?? "", orderBy].join("|"),
+    [categoryId, difficulty, maxTotalTime, orderBy, tagId],
   );
   const isFirstFilterSync = useRef(true);
 
@@ -75,16 +71,16 @@ export function SearchPageClient() {
 
   const recipeParams = useMemo(
     () => ({
-      search: debouncedSearch || undefined,
+      search: submittedSearch || undefined,
       categoryId: categoryId || undefined,
       tagId: tagId || undefined,
       difficulty: difficulty || undefined,
-      maxTotalTime: debouncedMaxTotalTime || undefined,
+      maxTotalTime: maxTotalTime || undefined,
       orderBy,
       page,
       limit: SEARCH_PAGE_SIZE,
     }),
-    [categoryId, debouncedMaxTotalTime, debouncedSearch, difficulty, orderBy, page, tagId],
+    [categoryId, difficulty, maxTotalTime, orderBy, page, submittedSearch, tagId],
   );
 
   useEffect(() => {
@@ -122,6 +118,13 @@ export function SearchPageClient() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleSearchSubmit = () => {
+    setSubmittedSearch((form.getValues("search") || "").trim());
+    if (form.getValues("page") !== 1) {
+      form.setValue("page", 1, { shouldValidate: false });
+    }
+  };
+
   return (
     <Form {...form}>
       <div className="container mx-auto px-4 py-8 md:py-12">
@@ -142,6 +145,7 @@ export function SearchPageClient() {
               isInitialLoading={isInitialLoading}
               isUpdating={isUpdating}
               totalItems={meta?.totalItems || 0}
+              onSearchSubmit={handleSearchSubmit}
             />
 
             {isInitialLoading ? (
@@ -162,6 +166,7 @@ export function SearchPageClient() {
                     orderBy: GetRecipesOrderBy.newest,
                     page: 1,
                   });
+                  setSubmittedSearch("");
                 }}
               />
             ) : (

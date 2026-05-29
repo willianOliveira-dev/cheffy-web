@@ -6,14 +6,15 @@ import { Search } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { GetMyFavoriteRecipesOrderBy } from "@/api/generated/model/getMyFavoriteRecipesOrderBy";
 import { useGetMyFavoriteRecipes } from "@/api/generated/users/users";
-import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
 import { cn } from "@/lib/utils";
 import { AuthDialog } from "@/components/auth/auth-dialog";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { RecipeCard } from "@/components/shared/recipe-card";
 import { RecipeCardSkeleton } from "@/components/shared/recipe-card-skeleton";
+import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -32,7 +33,6 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { FavoritesHero } from "./favorites-hero";
 import { FavoritesAuthPrompt, FavoritesEmptyState } from "./favorites-empty-state";
-import { DebouncedSearchInput } from "@/components/shared/debounced-input";
 
 const FAVORITES_PAGE_SIZE = 10;
 
@@ -56,16 +56,16 @@ export function FavoritesPageClient() {
   const search = useWatch({ control: form.control, name: "search" }) || "";
   const orderBy = useWatch({ control: form.control, name: "orderBy" });
   const page = useWatch({ control: form.control, name: "page" }) || 1;
-  const debouncedSearch = useDebouncedValue(search.trim(), 500);
+  const [submittedSearch, setSubmittedSearch] = useState(search.trim());
 
   const favoriteParams = useMemo(
     () => ({
       page,
       limit: FAVORITES_PAGE_SIZE,
-      search: debouncedSearch || undefined,
+      search: submittedSearch || undefined,
       orderBy,
     }),
-    [debouncedSearch, orderBy, page],
+    [orderBy, page, submittedSearch],
   );
 
   const {
@@ -99,6 +99,11 @@ export function FavoritesPageClient() {
     if (form.getValues("page") !== 1) {
       form.setValue("page", 1, { shouldValidate: false });
     }
+  };
+
+  const handleSearchSubmit = () => {
+    setSubmittedSearch((form.getValues("search") || "").trim());
+    resetPage();
   };
 
   return (
@@ -139,19 +144,33 @@ export function FavoritesPageClient() {
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <DebouncedSearchInput
+                              <Input
+                                type="search"
+                                enterKeyHint="search"
                                 value={field.value ?? ""}
-                                onChange={(val) => {
-                                  field.onChange(val);
-                                  resetPage();
+                                onChange={field.onChange}
+                                onKeyDown={(event) => {
+                                  if (event.key === "Enter") {
+                                    event.preventDefault();
+                                    handleSearchSubmit();
+                                  }
                                 }}
                                 placeholder="Buscar nos favoritos"
-                                className="h-10 rounded-full pl-9"
+                                className="h-10 rounded-full pl-9 pr-11"
                               />
                             </FormControl>
                           </FormItem>
                         )}
                       />
+                      <Button
+                        type="button"
+                        size="icon-sm"
+                        className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full"
+                        aria-label="Pesquisar favoritos"
+                        onClick={handleSearchSubmit}
+                      >
+                        <Search data-icon="inline-start" />
+                      </Button>
                     </div>
 
                     <FormField
@@ -200,7 +219,7 @@ export function FavoritesPageClient() {
                     ))}
                   </div>
                 ) : recipes.length === 0 ? (
-                  <FavoritesEmptyState debouncedSearch={debouncedSearch} />
+                  <FavoritesEmptyState search={submittedSearch} />
                 ) : (
                   <>
                     {isUpdating && (

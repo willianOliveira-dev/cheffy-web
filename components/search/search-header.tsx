@@ -1,9 +1,9 @@
 import { Search, SlidersHorizontal } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { GetRecipesOrderBy } from "@/api/generated/model";
-import { DebouncedSearchInput } from "@/components/shared/debounced-input";
 import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -26,6 +26,7 @@ type SearchHeaderProps = {
   isInitialLoading: boolean;
   isUpdating: boolean;
   totalItems: number;
+  onSearchSubmit: () => void;
 };
 
 export function SearchHeader({
@@ -33,6 +34,7 @@ export function SearchHeader({
   isInitialLoading,
   isUpdating,
   totalItems,
+  onSearchSubmit,
 }: SearchHeaderProps) {
   return (
     <>
@@ -62,12 +64,29 @@ export function SearchHeader({
                 <FormControl>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <DebouncedSearchInput
+                    <Input
+                      type="search"
+                      enterKeyHint="search"
                       placeholder="Buscar receitas pelo nome..."
-                      className="w-full bg-background pl-9"
+                      className="w-full bg-background pl-9 pr-11"
                       value={field.value ?? ""}
                       onChange={field.onChange}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
+                          onSearchSubmit();
+                        }
+                      }}
                     />
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full"
+                      aria-label="Pesquisar receitas"
+                      onClick={onSearchSubmit}
+                    >
+                      <Search data-icon="inline-start" />
+                    </Button>
                   </div>
                 </FormControl>
               </FormItem>
