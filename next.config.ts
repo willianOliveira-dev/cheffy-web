@@ -1,6 +1,30 @@
 import type { NextConfig } from "next";
 
+const apiProxyTarget = process.env.API_PROXY_TARGET?.replace(/\/+$/, "");
+
 const nextConfig: NextConfig = {
+  async rewrites() {
+    if (!apiProxyTarget) return [];
+
+    return [
+      {
+        source: "/api/auth/:path*",
+        destination: `${apiProxyTarget}/api/auth/:path*`,
+      },
+      {
+        source: "/api/v1/:path*",
+        destination: `${apiProxyTarget}/api/v1/:path*`,
+      },
+      {
+        source: "/doc",
+        destination: `${apiProxyTarget}/doc`,
+      },
+      {
+        source: "/docs",
+        destination: `${apiProxyTarget}/docs`,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

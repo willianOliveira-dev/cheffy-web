@@ -104,7 +104,7 @@ lib/
 **Fluxo de autenticação:**
 1. Usuário aciona o login pela interface.
 2. `better-auth/react` redireciona para o provider configurado no backend.
-3. A sessão é mantida por cookies do domínio da API.
+3. Em produção, a sessão é mantida por cookies da origem do frontend, com proxy do Next.js encaminhando `/api/auth/*` para a API.
 4. Componentes como favoritos e assistente consultam `authClient.useSession()`.
 
 **Fluxo de favoritos:**
@@ -135,7 +135,10 @@ lib/
 
 ### 6. Integração com Backend
 
-O frontend espera a **Cheffy API** disponível em `NEXT_PUBLIC_API_URL`.
+O frontend usa `NEXT_PUBLIC_API_URL` como origem pública das chamadas feitas pelo navegador.
+Em desenvolvimento, essa URL pode apontar diretamente para a API local. Em produção,
+prefira apontar para o próprio frontend e usar `API_PROXY_TARGET` para encaminhar
+`/api/auth/*`, `/api/v1/*`, `/doc` e `/docs` para a **Cheffy API**.
 
 Principais integrações:
 
@@ -160,10 +163,11 @@ Crie um `.env` local a partir de `.env.example`.
 
 | Variável | Obrigatória | Descrição |
 |----------|-------------|-----------|
-| `NEXT_PUBLIC_API_URL` | ✅ | URL pública da Cheffy API. Local: `http://localhost:8000` |
+| `NEXT_PUBLIC_API_URL` | ✅ | Origem pública usada pelo navegador. Local: `http://localhost:8000`; produção com proxy: URL do frontend |
 | `NEXT_PUBLIC_FRONTEND_URL` | ✅ | URL pública do frontend. Local: `http://localhost:3333` |
+| `API_PROXY_TARGET` | ✅ em produção | URL real da Cheffy API usada pelos rewrites do Next.js. Local: `http://localhost:8000` |
 
-> No Vercel, configure essas variáveis em **Project Settings → Environment Variables**. Como são `NEXT_PUBLIC_*`, elas entram no bundle do navegador durante o build.
+> No Vercel, configure essas variáveis em **Project Settings → Environment Variables**. As variáveis `NEXT_PUBLIC_*` entram no bundle do navegador durante o build; `API_PROXY_TARGET` fica apenas no runtime/config do Next.js.
 
 ---
 
@@ -224,6 +228,7 @@ NEXT_PUBLIC_API_URL/doc
 ```
 
 Antes de rodar, a API precisa estar ativa e o `.env` precisa conter `NEXT_PUBLIC_API_URL`.
+Para geração local, mantenha `NEXT_PUBLIC_API_URL` apontando diretamente para a API ou rode o frontend com `API_PROXY_TARGET` configurado.
 
 ---
 
@@ -244,18 +249,20 @@ Configuração esperada:
 Variáveis para produção:
 
 ```env
-NEXT_PUBLIC_API_URL=https://sua-api.onrender.com
+NEXT_PUBLIC_API_URL=https://seu-frontend.vercel.app
 NEXT_PUBLIC_FRONTEND_URL=https://seu-frontend.vercel.app
+API_PROXY_TARGET=https://sua-api.onrender.com
 ```
 
 Checklist antes do deploy:
 
 - API publicada e acessível via HTTPS.
 - `FRONTEND_URL` e `ALLOWED_ORIGINS` configurados na Cheffy API.
-- `BETTER_AUTH_URL` configurado no backend com a URL pública da API.
-- Callback OAuth do Google liberado para o domínio do backend.
-- `NEXT_PUBLIC_API_URL` apontando para a API publicada.
+- `BETTER_AUTH_URL` configurado no backend com a URL pública do frontend, porque `/api/auth/*` será servido via proxy.
+- Callback OAuth do Google liberado para `https://seu-frontend.vercel.app/api/auth/callback/google`.
+- `NEXT_PUBLIC_API_URL` apontando para o domínio Vercel do frontend.
 - `NEXT_PUBLIC_FRONTEND_URL` apontando para o domínio Vercel.
+- `API_PROXY_TARGET` apontando para a API publicada no Render.
 
 ---
 
