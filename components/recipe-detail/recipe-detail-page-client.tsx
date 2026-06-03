@@ -1,15 +1,16 @@
 "use client";
 
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowLeft, Home, Search } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getGetHomeQueryKey } from "@/api/generated/home/home";
 import { getGetRecipesQueryKey, useGetRecipeBySlug } from "@/api/generated/recipes/recipes";
 import { getGetMyFavoriteRecipesQueryKey } from "@/api/generated/users/users";
+import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -65,25 +66,7 @@ export function RecipeDetailPageClient({ slug }: RecipeDetailPageClientProps) {
   }
 
   if (isError || !recipe) {
-    return (
-      <div className="min-h-screen bg-background">
-        <SiteHeader />
-        <main className="container mx-auto flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
-          <Alert variant="destructive" className="max-w-lg">
-            <AlertCircle />
-            <AlertTitle>Receita não encontrada</AlertTitle>
-            <AlertDescription>
-              Não foi possível carregar essa receita. Ela pode ter sido removida ou ainda não está publicada.
-            </AlertDescription>
-            <div className="mt-4">
-              <Button asChild variant="outline">
-                <Link href="/receitas">Voltar para receitas</Link>
-              </Button>
-            </div>
-          </Alert>
-        </main>
-      </div>
-    );
+    return <RecipeNotFoundState />;
   }
 
   const sections = [...(recipe.sections ?? [])].sort((a, b) => a.position - b.position);
@@ -132,6 +115,78 @@ export function RecipeDetailPageClient({ slug }: RecipeDetailPageClientProps) {
       <div className="fixed left-[-10000px] top-0 w-[794px]" aria-hidden="true">
         <RecipePrintDocument ref={printRef} recipe={recipe} />
       </div>
+    </div>
+  );
+}
+
+function RecipeNotFoundState() {
+  return (
+    <div className="flex min-h-screen flex-col bg-background">
+      <SiteHeader />
+      <main className="relative flex flex-1 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(248,113,84,0.16),transparent_32rem),linear-gradient(135deg,rgba(255,247,237,0.92),rgba(255,255,255,1)_42%,rgba(248,250,252,1))]" />
+
+        <div className="container relative mx-auto grid min-h-[calc(100svh-4rem)] items-center gap-10 px-4 py-12 md:grid-cols-[minmax(0,1fr)_24rem] md:py-16 lg:gap-16">
+          <section className="max-w-2xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-background/80 px-3 py-1 text-sm font-medium text-muted-foreground shadow-sm backdrop-blur">
+              <AlertCircle className="h-4 w-4 text-primary" />
+              Receita indisponível
+            </div>
+
+            <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground md:text-6xl">
+              Essa receita saiu do cardápio.
+            </h1>
+            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground md:text-lg">
+              Não conseguimos carregar a receita solicitada. Ela pode ter sido removida,
+              estar em rascunho ou o link pode estar incorreto.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button asChild size="lg" className="rounded-full">
+                <Link href="/receitas">
+                  <Search data-icon="inline-start" />
+                  Explorar receitas
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="rounded-full bg-background/70">
+                <Link href="/">
+                  <Home data-icon="inline-start" />
+                  Ir para home
+                </Link>
+              </Button>
+            </div>
+
+            <Button asChild variant="ghost" className="mt-4 rounded-full px-0 text-muted-foreground hover:bg-transparent">
+              <Link href="/receitas">
+                <ArrowLeft data-icon="inline-start" />
+                Voltar para a busca de receitas
+              </Link>
+            </Button>
+          </section>
+
+          <aside className="hidden md:block">
+            <div className="relative overflow-hidden rounded-2xl border bg-background/80 p-8 shadow-sm backdrop-blur">
+              <div className="absolute right-0 top-0 h-28 w-28 rounded-bl-full bg-primary/10" />
+              <div className="relative flex flex-col items-center text-center">
+                <Image
+                  src="/images/image-not-found.svg"
+                  alt="Receita nao encontrada"
+                  width={360}
+                  height={240}
+                  priority
+                  className="aspect-[3/2] w-full max-w-72 rounded-xl object-cover"
+                />
+                <h2 className="mt-6 font-heading text-2xl font-bold">Continue cozinhando</h2>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Use a busca para encontrar outra receita publicada com ingredientes,
+                  preparo e tabela nutricional.
+                </p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </main>
+      <SiteFooter />
     </div>
   );
 }
