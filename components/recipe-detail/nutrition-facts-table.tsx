@@ -37,6 +37,7 @@ export function NutritionFactsTable({ nutrition }: NutritionFactsTableProps) {
   const rows = useMemo(() => buildNutritionRows(nutrition), [nutrition]);
   const servingLabel = formatNutritionServingLabel(nutrition);
   const servingsLabel = formatNutritionServingsLabel(nutrition);
+
   if (!nutrition) {
     return (
       <section id="nutricao" className="flex flex-col gap-5">
@@ -58,39 +59,54 @@ export function NutritionFactsTable({ nutrition }: NutritionFactsTableProps) {
 
       <Card>
         <CardHeader className="border-b">
-          <CardTitle className="uppercase tracking-wide">Informação nutricional</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Porções por receita: {servingsLabel} · Porção: {servingLabel}
-          </p>
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <CardTitle className="uppercase tracking-wide">Informação nutricional</CardTitle>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Porções por receita: {servingsLabel} · Porção: {servingLabel}
+              </p>
+            </div>
+
+            <div className="rounded-lg border bg-accent/40 px-4 py-3 md:text-right">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Total da receita
+              </p>
+              <p className="mt-1 font-heading text-2xl font-bold text-foreground">
+                {formatEnergy(nutrition.totalEnergyKcal)}
+              </p>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="pt-4">
-          <Table className="border text-sm">
-            <TableCaption>
-              Modelo com colunas por 100 g, porção e %VD, alinhado à rotulagem nutricional vigente da ANVISA.
-            </TableCaption>
-            <TableHeader>
-              <TableRow className="border-foreground/70 hover:bg-transparent">
-                <TableHead className="border border-foreground/30 font-bold">Informação nutricional</TableHead>
-                <TableHead className="border border-foreground/30 font-bold">100 g</TableHead>
-                <TableHead className="border border-foreground/30 font-bold">{servingLabel}</TableHead>
-                <TableHead className="border border-foreground/30 font-bold">%VD*</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.nutrient} className="hover:bg-muted/30">
-                  <TableCell className="border border-foreground/20">
-                    <span className={row.isIndented ? "pl-4 text-muted-foreground" : "font-medium"}>
-                      {row.nutrient}
-                    </span>
-                  </TableCell>
-                  <TableCell className="border border-foreground/20">{row.per100g}</TableCell>
-                  <TableCell className="border border-foreground/20">{row.perServing}</TableCell>
-                  <TableCell className="border border-foreground/20">{row.dailyValue}</TableCell>
+          <div className="overflow-x-auto">
+            <Table className="min-w-[44rem] border text-sm">
+              <TableCaption>
+                Modelo com colunas por 100 g, porção e %VD, alinhado à rotulagem nutricional vigente da ANVISA.
+              </TableCaption>
+              <TableHeader>
+                <TableRow className="border-foreground/70 hover:bg-transparent">
+                  <TableHead className="border border-foreground/30 font-bold">Informação nutricional</TableHead>
+                  <TableHead className="border border-foreground/30 font-bold">100 g</TableHead>
+                  <TableHead className="border border-foreground/30 font-bold">{servingLabel}</TableHead>
+                  <TableHead className="border border-foreground/30 font-bold">%VD*</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {rows.map((row) => (
+                  <TableRow key={row.nutrient} className="hover:bg-muted/30">
+                    <TableCell className="border border-foreground/20">
+                      <span className={row.isIndented ? "pl-4 text-muted-foreground" : "font-medium"}>
+                        {row.nutrient}
+                      </span>
+                    </TableCell>
+                    <TableCell className="border border-foreground/20">{row.per100g}</TableCell>
+                    <TableCell className="border border-foreground/20">{row.perServing}</TableCell>
+                    <TableCell className="border border-foreground/20">{row.dailyValue}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
           <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
             *Percentual de valores diários fornecidos pela porção. Valores diários de referência com base em uma dieta de

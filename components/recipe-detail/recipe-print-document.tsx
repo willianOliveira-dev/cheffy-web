@@ -86,7 +86,8 @@ export const RecipePrintDocument = forwardRef<HTMLDivElement, RecipePrintDocumen
               <h2 className="mb-4 border-b border-black pb-2 text-2xl font-bold">Informação nutricional</h2>
               <p className="mb-2 text-sm">
                 Porções por receita: {nutritionServingsLabel} · Porção:{" "}
-                {nutritionServingLabel}
+                {nutritionServingLabel} · Total da receita:{" "}
+                {formatPrintEnergy(recipe.nutritionLabel.totalEnergyKcal)}
               </p>
               <table className="w-full border-collapse text-sm">
                 <thead>

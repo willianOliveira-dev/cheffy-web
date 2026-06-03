@@ -24,6 +24,7 @@ export type RecipeNutritionLabel = {
   servingDescription: string | null;
   /** @nullable */
   servingsDescription: string | null;
+  totalEnergyKcal: number;
   energyKcalPer100g: number;
   carbohydratesPer100g: number;
   /** @nullable */
