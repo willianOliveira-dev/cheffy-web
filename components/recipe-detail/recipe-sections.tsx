@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { PackageOpen } from "lucide-react";
 import type { RecipeSection } from "@/api/generated/model";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

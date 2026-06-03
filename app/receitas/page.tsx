@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { SearchPageClient } from "@/components/search/search-page-client";

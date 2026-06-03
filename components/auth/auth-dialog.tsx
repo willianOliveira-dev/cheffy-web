@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { useState } from "react";
 import { Loader2, X } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";

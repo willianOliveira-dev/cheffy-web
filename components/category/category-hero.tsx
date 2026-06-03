@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import { ArrowLeft, ChevronRight, icons } from "lucide-react";
 import { Button } from "@/components/ui/button";

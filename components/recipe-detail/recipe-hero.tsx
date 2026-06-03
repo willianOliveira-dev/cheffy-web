@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import type { ElementType } from "react";
 import { ArrowLeft, Clock, Eye, Flame, Users } from "lucide-react";

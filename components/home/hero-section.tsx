@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ShareCheffyButton } from "./share-cheffy-button";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import { BookOpen, Heart, LogIn, LogOut, PlusCircle, User } from "lucide-react";
 import { AuthDialog } from "@/components/auth/auth-dialog";

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { User } from "lucide-react";
 import { Streamdown } from "streamdown";
 import { cn } from "@/lib/utils";

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import { Clock, ArrowRight } from "lucide-react";
 import { RecipeSummary } from "@/api/generated/model";

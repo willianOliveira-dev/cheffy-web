@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { ImagePlus, Loader2 } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
 import { cn } from "@/lib/utils";

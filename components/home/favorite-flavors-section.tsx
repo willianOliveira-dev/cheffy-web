@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import { useGetCategories } from "@/api/generated/categories/categories";
 import { GetCategoriesOrderBy } from "@/api/generated/model";

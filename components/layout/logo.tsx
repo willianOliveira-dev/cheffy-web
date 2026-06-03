@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 
 export function Logo() {
   return (

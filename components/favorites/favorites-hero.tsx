@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import { ArrowLeft, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";

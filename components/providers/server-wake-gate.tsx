@@ -3,7 +3,7 @@
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { getHealth } from "@/api/generated/health/health";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 
 const TIMEOUT_MS = 5_000;
 const RETRY_INTERVAL_MS = 3_000;

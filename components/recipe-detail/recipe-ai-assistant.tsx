@@ -2,7 +2,7 @@
 
 import type { KeyboardEvent } from "react";
 import { useState } from "react";
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { Maximize2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import type { Recipe } from "@/api/generated/model";
