@@ -119,6 +119,14 @@ lib/
 3. Tokens chegam em tempo real e são renderizados no chat.
 4. O backend mantém contexto da receita e do usuário autenticado.
 
+**Fluxo de upload de imagens (Cloudinary):**
+1. O usuário seleciona uma imagem no formulário de receitas (`recipe-form.tsx`).
+2. O frontend chama a mutation de assinatura (`useSignUpload`) enviando o target (ex: `recipes`) e o ID da entidade.
+3. O backend (Cheffy API) responde com credenciais temporárias, folder e uma assinatura criptográfica.
+4. O frontend faz um `POST` direto para a URL do Cloudinary com o arquivo original via `FormData`.
+5. O Cloudinary processa, armazena e devolve a `secure_url` e `public_id`.
+6. O frontend salva essas URLs no estado do form via React Hook Form e submete na criação/edição da receita.
+
 ---
 
 ### 5. Rotas da Aplicação

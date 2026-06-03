@@ -5,8 +5,8 @@ import { useWatch } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 import type { Ingredient } from "@/api/generated/model";
 import { calculateNutritionPreview } from "@/lib/recipe-nutrition-preview";
-import { EMPTY_RECIPE_SECTIONS } from "./recipe-form-constants";
-import type { RecipeFormValues } from "./recipe-form-types";
+import { EMPTY_RECIPE_SECTIONS } from "@/lib/my-recipes/recipe-form-constants";
+import type { RecipeFormValues } from "@/lib/my-recipes/recipe-form-types";
 import { NutritionPreviewPanel } from "./nutrition-preview-panel";
 
 type RecipeNutritionPreviewProps = {

@@ -14,7 +14,7 @@ import {
   createEmptyIngredient,
   createEmptyStep,
   type RecipeFormValues,
-} from "./recipe-form-types";
+} from "@/lib/my-recipes/recipe-form-types";
 
 type SectionEditorProps = {
   form: UseFormReturn<RecipeFormValues>;

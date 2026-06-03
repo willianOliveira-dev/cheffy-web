@@ -15,7 +15,7 @@ import { FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { RecipeFormValues } from "./recipe-form-types";
+import type { RecipeFormValues } from "@/lib/my-recipes/recipe-form-types";
 
 type RecipeMainInfoCardProps = {
   form: UseFormReturn<RecipeFormValues>;

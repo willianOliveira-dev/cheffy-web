@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
 import { Info } from "lucide-react";
 import type { RecipeNutritionLabel } from "@/api/generated/model";
 import {
@@ -38,41 +37,6 @@ export function NutritionFactsTable({ nutrition }: NutritionFactsTableProps) {
   const rows = useMemo(() => buildNutritionRows(nutrition), [nutrition]);
   const servingLabel = formatNutritionServingLabel(nutrition);
   const servingsLabel = formatNutritionServingsLabel(nutrition);
-  const columns = useMemo<ColumnDef<NutritionRow>[]>(
-    () => [
-      {
-        accessorKey: "nutrient",
-        header: "Informação nutricional",
-        cell: ({ row }) => (
-          <span className={row.original.isIndented ? "pl-4 text-muted-foreground" : "font-medium"}>
-            {row.original.nutrient}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "per100g",
-        header: "100 g",
-      },
-      {
-        accessorKey: "perServing",
-        header: servingLabel,
-      },
-      {
-        accessorKey: "dailyValue",
-        header: "%VD*",
-      },
-    ],
-    [servingLabel],
-  );
-
-  // TanStack Table exposes runtime methods; this component does not pass them to memoized children.
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const table = useReactTable({
-    data: rows,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
   if (!nutrition) {
     return (
       <section id="nutricao" className="flex flex-col gap-5">
@@ -105,26 +69,24 @@ export function NutritionFactsTable({ nutrition }: NutritionFactsTableProps) {
               Modelo com colunas por 100 g, porção e %VD, alinhado à rotulagem nutricional vigente da ANVISA.
             </TableCaption>
             <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="border-foreground/70 hover:bg-transparent">
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="border border-foreground/30 font-bold">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
+              <TableRow className="border-foreground/70 hover:bg-transparent">
+                <TableHead className="border border-foreground/30 font-bold">Informação nutricional</TableHead>
+                <TableHead className="border border-foreground/30 font-bold">100 g</TableHead>
+                <TableHead className="border border-foreground/30 font-bold">{servingLabel}</TableHead>
+                <TableHead className="border border-foreground/30 font-bold">%VD*</TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="hover:bg-muted/30">
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="border border-foreground/20">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+              {rows.map((row) => (
+                <TableRow key={row.nutrient} className="hover:bg-muted/30">
+                  <TableCell className="border border-foreground/20">
+                    <span className={row.isIndented ? "pl-4 text-muted-foreground" : "font-medium"}>
+                      {row.nutrient}
+                    </span>
+                  </TableCell>
+                  <TableCell className="border border-foreground/20">{row.per100g}</TableCell>
+                  <TableCell className="border border-foreground/20">{row.perServing}</TableCell>
+                  <TableCell className="border border-foreground/20">{row.dailyValue}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

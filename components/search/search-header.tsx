@@ -1,5 +1,5 @@
 import { SlidersHorizontal } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { GetRecipesOrderBy } from "@/api/generated/model";
 import { SearchSubmitField } from "@/components/shared/search-submit-field";
 import { Button } from "@/components/ui/button";
@@ -18,11 +18,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import type { SearchFormValues } from "@/lib/schemas/search";
 import { SearchFilters } from "./search-filters";
 
 type SearchHeaderProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<any>;
+  form: UseFormReturn<SearchFormValues>;
   isInitialLoading: boolean;
   isUpdating: boolean;
   totalItems: number;
@@ -46,7 +46,7 @@ export function SearchHeader({
                 <SlidersHorizontal className="h-4 w-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex h-dvh w-[300px] flex-col overflow-hidden sm:w-[400px]">
+            <SheetContent side="left" className="flex h-dvh w-75 flex-col overflow-hidden sm:w-100">
               <SheetHeader className="shrink-0">
                 <SheetTitle>Filtros</SheetTitle>
               </SheetHeader>

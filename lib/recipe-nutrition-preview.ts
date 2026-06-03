@@ -1,5 +1,5 @@
 import type { Ingredient } from "@/api/generated/model";
-import type { RecipeFormValues } from "@/components/my-recipes/recipe-form-types";
+import type { RecipeFormValues } from "@/lib/my-recipes/recipe-form-types";
 
 export type NutritionKey =
   | "energyKcal"

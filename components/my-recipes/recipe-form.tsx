@@ -25,15 +25,15 @@ import { RecipeNutritionPreview } from "./recipe-nutrition-preview";
 import { RecipeMainInfoCard } from "./recipe-main-info-card";
 import { SectionEditor } from "./recipe-section-editor";
 import { RecipeSubmitActions } from "./recipe-submit-actions";
-import { EMPTY_TAG_IDS, INGREDIENTS_PAGE_SIZE } from "./recipe-form-constants";
-import { buildRecipePayload, mergeIngredients } from "./recipe-form-helpers";
+import { EMPTY_TAG_IDS, INGREDIENTS_PAGE_SIZE } from "@/lib/my-recipes/recipe-form-constants";
+import { buildRecipePayload, mergeIngredients } from "@/lib/my-recipes/recipe-form-helpers";
 import {
   createEmptyRecipeFormValues,
   createEmptySection,
   mapRecipeToFormValues,
   type RecipeFormMode,
   type RecipeFormValues,
-} from "./recipe-form-types";
+} from "@/lib/my-recipes/recipe-form-types";
 
 type RecipeFormProps = {
   mode: RecipeFormMode;

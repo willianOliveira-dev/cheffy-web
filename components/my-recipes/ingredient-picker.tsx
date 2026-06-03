@@ -18,8 +18,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { INGREDIENTS_PAGE_SIZE } from "./recipe-form-constants";
-import { mergeIngredients } from "./recipe-form-helpers";
+import { INGREDIENTS_PAGE_SIZE } from "@/lib/my-recipes/recipe-form-constants";
+import { mergeIngredients } from "@/lib/my-recipes/recipe-form-helpers";
 
 type IngredientPickerSearchValues = {
   search: string;
