@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Keyboard, X } from "lucide-react";
 import type { PreparationStep, RecipeSection } from "@/api/generated/model";
@@ -116,57 +116,68 @@ export function PreparationModeDialog({ open, onOpenChange, sections }: Preparat
         ) : (
           <main
             className={cn(
-              "kitchen-mode-surface min-h-0",
-              activeStep.imageUrl ? "grid lg:grid-cols-[42vw_1fr]" : "flex items-center justify-center",
+              "kitchen-mode-surface relative min-h-0 overflow-y-auto px-4 py-6 md:px-8 md:py-10",
+              activeStep.imageUrl ? "flex items-center justify-center" : "flex items-center justify-center",
             )}
           >
-            <div className={cn("relative min-h-64 overflow-hidden bg-muted lg:min-h-0", !activeStep.imageUrl && "hidden")}>
+            <div
+              className={cn(
+                "mx-auto grid w-full max-w-6xl overflow-hidden rounded-xl bg-[#fff9f2] shadow-sm ring-1 ring-black/5",
+                activeStep.imageUrl ? "md:grid-cols-[minmax(18rem,0.95fr)_minmax(22rem,1.05fr)]" : "max-w-4xl",
+              )}
+            >
               {activeStep.imageUrl && (
                 <button
                   type="button"
-                  className="relative h-full w-full cursor-zoom-in"
+                  className="group relative min-h-64 cursor-zoom-in overflow-hidden bg-muted text-left md:min-h-96"
                   onClick={() => setExpandedImageUrl(activeStep.imageUrl)}
                 >
                   <Image
                     src={activeStep.imageUrl}
-                    alt={`Passo ${safeActiveIndex + 1}`}
+                    alt={`Imagem do passo ${safeActiveIndex + 1}`}
                     fill
                     priority
-                    className="object-cover"
+                    className="object-cover transition duration-500 group-hover:scale-105"
                   />
+                  <span className="absolute left-4 top-4 flex size-10 items-center justify-center rounded-full bg-primary text-base font-bold text-primary-foreground shadow-lg md:size-12 md:text-lg">
+                    {safeActiveIndex + 1}
+                  </span>
                 </button>
               )}
-            </div>
 
-            <div className="flex min-h-0 w-full items-center justify-center overflow-y-auto px-6 py-10 md:px-12">
-              <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-7 text-center">
-                <p className="text-sm font-medium text-muted-foreground">
-                  {activeStep.sectionTitle}
-                </p>
-                <h2 className="kitchen-step-title font-heading text-3xl font-bold md:text-4xl">
-                  Passo {safeActiveIndex + 1}
-                </h2>
-                <p className="kitchen-step-copy text-xl leading-loose md:text-2xl">
-                  {activeStep.description}
-                </p>
-                <Button
-                  type="button"
-                  variant={isCompleted ? "default" : "outline"}
-                  className={cn(
-                    "w-full max-w-3xl rounded-full",
-                    isCompleted && "kitchen-done-button",
-                  )}
-                  onClick={toggleCompleted}
-                >
-                  {isCompleted ? (
-                    "Feito"
-                  ) : (
-                    <>
-                      <Check data-icon="inline-start" />
-                      marquei como feito
-                    </>
-                  )}
-                </Button>
+              <div className="flex min-h-80 w-full items-center justify-center px-6 py-8 md:px-10 lg:px-14">
+                <div className={cn("flex w-full flex-col gap-6", activeStep.imageUrl ? "text-left" : "items-center text-center")}>
+                  <div className={cn("flex flex-col gap-2", !activeStep.imageUrl && "items-center")}>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      {activeStep.sectionTitle}
+                    </p>
+                    <h2 className="kitchen-step-title font-heading text-3xl font-bold md:text-4xl">
+                      Passo {safeActiveIndex + 1}
+                    </h2>
+                  </div>
+                  <p className="kitchen-step-copy text-lg leading-loose md:text-xl">
+                    {activeStep.description}
+                  </p>
+                  <Button
+                    type="button"
+                    variant={isCompleted ? "default" : "outline"}
+                    className={cn(
+                      "w-full rounded-full",
+                      !activeStep.imageUrl && "max-w-3xl",
+                      isCompleted && "kitchen-done-button",
+                    )}
+                    onClick={toggleCompleted}
+                  >
+                    {isCompleted ? (
+                      "Feito"
+                    ) : (
+                      <>
+                        <Check data-icon="inline-start" />
+                        marquei como feito
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
 
