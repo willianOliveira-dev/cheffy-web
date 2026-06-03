@@ -6,12 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type SignUploadBodyTarget = typeof SignUploadBodyTarget[keyof typeof SignUploadBodyTarget];
+export type GetMyRecipesOrderBy = typeof GetMyRecipesOrderBy[keyof typeof GetMyRecipesOrderBy];
 
 
-export const SignUploadBodyTarget = {
-  recipes: 'recipes',
-  ingredients: 'ingredients',
-  categories: 'categories',
-  preparationSteps: 'preparationSteps',
+export const GetMyRecipesOrderBy = {
+  newest: 'newest',
+  oldest: 'oldest',
 } as const;

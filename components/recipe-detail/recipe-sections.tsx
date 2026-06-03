@@ -1,10 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { PackageOpen, Timer } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 import type { RecipeSection } from "@/api/generated/model";
-import { formatMinutes } from "@/lib/recipe-formatters";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type RecipeSectionsProps = {
@@ -83,16 +81,10 @@ export function RecipeSections({ sections }: RecipeSectionsProps) {
                             {index + 1}
                           </div>
                           <div className="min-w-0">
-                            <div className="mb-3 flex flex-wrap items-center gap-2">
-                              <Badge variant="secondary">
-                                <Timer className="h-3.5 w-3.5" />
-                                {formatMinutes(step.stepTime)}
-                              </Badge>
-                            </div>
                             <p className="text-base leading-relaxed text-foreground">{step.description}</p>
-                            {step.mediaUrl && (
+                            {step.imageUrl && (
                               <div className="relative mt-4 aspect-video overflow-hidden rounded-xl bg-muted">
-                                <Image src={step.mediaUrl} alt={`Etapa ${index + 1}`} fill className="object-cover" />
+                                <Image src={step.imageUrl} alt={`Etapa ${index + 1}`} fill className="object-cover" />
                               </div>
                             )}
                           </div>

@@ -69,10 +69,7 @@ export const RecipePrintDocument = forwardRef<HTMLDivElement, RecipePrintDocumen
                               <span className="flex h-7 w-7 items-center justify-center rounded-full border border-black text-xs font-bold">
                                 {index + 1}
                               </span>
-                              <span>
-                                {step.description}
-                                {step.stepTime ? <strong> Tempo: {formatMinutes(step.stepTime)}.</strong> : null}
-                              </span>
+                              <span>{step.description}</span>
                             </li>
                           ))}
                         </ol>

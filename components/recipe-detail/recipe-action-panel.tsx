@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Printer } from "lucide-react";
+import { CookingPot, Printer } from "lucide-react";
 import type { Recipe } from "@/api/generated/model";
 import { formatDifficulty, formatMinutes, formatYield } from "@/lib/recipe-formatters";
 import { FavoriteRecipeButton } from "@/components/shared/favorite-recipe-button";
@@ -17,7 +17,7 @@ type RecipeActionPanelProps = {
 
 export function RecipeActionPanel({ recipe, onPrint, onOpenCookingMode }: RecipeActionPanelProps) {
   return (
-    <aside className="order-first flex flex-col gap-4 lg:sticky lg:top-24 lg:order-none">
+    <aside className="order-first flex flex-col gap-4 lg:sticky lg:top-24 lg:order-0">
       <Card>
         <CardHeader>
           <CardTitle>Resumo da receita</CardTitle>
@@ -41,8 +41,8 @@ export function RecipeActionPanel({ recipe, onPrint, onOpenCookingMode }: Recipe
               className="w-full"
             />
             <Button type="button" variant="outline" className="w-full rounded-full" onClick={onOpenCookingMode}>
-              <Clock data-icon="inline-start" />
-              Modo de preparo
+              <CookingPot data-icon="inline-start" />
+              Modo cozinha
             </Button>
             <Button type="button" variant="outline" className="w-full rounded-full" onClick={onPrint}>
               <Printer data-icon="inline-start" />

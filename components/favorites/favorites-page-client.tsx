@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { keepPreviousData } from "@tanstack/react-query";
-import { Search } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { GetMyFavoriteRecipesOrderBy } from "@/api/generated/model/getMyFavoriteRecipesOrderBy";
 import { useGetMyFavoriteRecipes } from "@/api/generated/users/users";
@@ -12,9 +11,8 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { RecipeCard } from "@/components/shared/recipe-card";
 import { RecipeCardSkeleton } from "@/components/shared/recipe-card-skeleton";
-import { Button } from "@/components/ui/button";
+import { SearchSubmitField } from "@/components/shared/search-submit-field";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -136,42 +134,14 @@ export function FavoritesPageClient() {
                   </div>
 
                   <div className="grid gap-3 sm:grid-cols-[minmax(16rem,1fr)_11rem] md:w-lg">
-                    <div className="relative">
-                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <FormField
-                        control={form.control}
-                        name="search"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input
-                                type="search"
-                                enterKeyHint="search"
-                                value={field.value ?? ""}
-                                onChange={field.onChange}
-                                onKeyDown={(event) => {
-                                  if (event.key === "Enter") {
-                                    event.preventDefault();
-                                    handleSearchSubmit();
-                                  }
-                                }}
-                                placeholder="Buscar nos favoritos"
-                                className="h-10 rounded-full pl-9 pr-11"
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <Button
-                        type="button"
-                        size="icon-sm"
-                        className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full"
-                        aria-label="Pesquisar favoritos"
-                        onClick={handleSearchSubmit}
-                      >
-                        <Search data-icon="inline-start" />
-                      </Button>
-                    </div>
+                    <SearchSubmitField
+                      control={form.control}
+                      name="search"
+                      placeholder="Buscar nos favoritos"
+                      ariaLabel="Pesquisar favoritos"
+                      inputClassName="h-10 rounded-full"
+                      onSubmit={handleSearchSubmit}
+                    />
 
                     <FormField
                       control={form.control}

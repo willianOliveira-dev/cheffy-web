@@ -11,7 +11,8 @@ export type UpdateRecipeBodySectionsItemStepsItem = {
   description: string;
   /** @minimum 0 */
   position: number;
-  /** @exclusiveMinimum 0 */
-  stepTime?: number;
-  mediaUrl?: string;
+  /** @nullable */
+  imageUrl?: string | null;
+  /** @nullable */
+  imagePublicId?: string | null;
 };

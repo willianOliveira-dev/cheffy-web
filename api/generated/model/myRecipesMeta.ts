@@ -6,12 +6,11 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type SignUploadBodyTarget = typeof SignUploadBodyTarget[keyof typeof SignUploadBodyTarget];
-
-
-export const SignUploadBodyTarget = {
-  recipes: 'recipes',
-  ingredients: 'ingredients',
-  categories: 'categories',
-  preparationSteps: 'preparationSteps',
-} as const;
+export type MyRecipesMeta = {
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+};

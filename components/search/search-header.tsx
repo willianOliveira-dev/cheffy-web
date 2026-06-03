@@ -1,9 +1,9 @@
-import { Search, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { GetRecipesOrderBy } from "@/api/generated/model";
+import { SearchSubmitField } from "@/components/shared/search-submit-field";
 import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -56,40 +56,13 @@ export function SearchHeader({
             </SheetContent>
           </Sheet>
 
-          <FormField
+          <SearchSubmitField
             control={form.control}
             name="search"
-            render={({ field }) => (
-              <FormItem className="w-full flex-1">
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      type="search"
-                      enterKeyHint="search"
-                      placeholder="Buscar receitas pelo nome..."
-                      className="w-full bg-background pr-11"
-                      value={field.value ?? ""}
-                      onChange={field.onChange}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          event.preventDefault();
-                          onSearchSubmit();
-                        }
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      size="icon-sm"
-                      className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full"
-                      aria-label="Pesquisar receitas"
-                      onClick={onSearchSubmit}
-                    >
-                      <Search data-icon="inline-start" />
-                    </Button>
-                  </div>
-                </FormControl>
-              </FormItem>
-            )}
+            placeholder="Buscar receitas pelo nome..."
+            ariaLabel="Pesquisar receitas"
+            inputClassName="bg-background"
+            onSubmit={onSearchSubmit}
           />
         </div>
 

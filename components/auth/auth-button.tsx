@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, LogIn, LogOut, User } from "lucide-react";
+import { BookOpen, Heart, LogIn, LogOut, PlusCircle, User } from "lucide-react";
 import { AuthDialog } from "@/components/auth/auth-dialog";
 import { authClient } from "@/lib/auth-client";
 import {
@@ -74,6 +74,18 @@ export function AuthButton() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/minhas-receitas">
+                  <BookOpen data-icon="inline-start" />
+                  As minhas receitas
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/receitas/nova">
+                  <PlusCircle data-icon="inline-start" />
+                  Compartilhar receita
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem asChild className="cursor-pointer">
                 <Link href="/favoritos">
                   <Heart data-icon="inline-start" />

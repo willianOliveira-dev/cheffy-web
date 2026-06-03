@@ -6,12 +6,17 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type SignUploadBodyTarget = typeof SignUploadBodyTarget[keyof typeof SignUploadBodyTarget];
+export type UpdateMyRecipeBodyYieldUnit = typeof UpdateMyRecipeBodyYieldUnit[keyof typeof UpdateMyRecipeBodyYieldUnit];
 
 
-export const SignUploadBodyTarget = {
-  recipes: 'recipes',
-  ingredients: 'ingredients',
-  categories: 'categories',
-  preparationSteps: 'preparationSteps',
+export const UpdateMyRecipeBodyYieldUnit = {
+  PORTIONS: 'PORTIONS',
+  PEOPLE: 'PEOPLE',
+  UNITS: 'UNITS',
+  SLICES: 'SLICES',
+  PIECES: 'PIECES',
+  CUPS: 'CUPS',
+  GLASSES: 'GLASSES',
+  PLATES: 'PLATES',
+  TO_TASTE: 'TO_TASTE',
 } as const;

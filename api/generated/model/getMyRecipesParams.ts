@@ -5,13 +5,19 @@
  * A Cheffy API é o backend central de uma aplicação de receitas, projetado para gerenciar catálogo culinário, categorias, tags, ingredientes, informações nutricionais, favoritos de usuário, autenticação via Better Auth, assinatura de upload no Cloudinary e um assistente gastronômico integrado à Groq.
  * OpenAPI spec version: 1.0.0
  */
+import type { GetMyRecipesIsPublished } from './getMyRecipesIsPublished';
+import type { GetMyRecipesOrderBy } from './getMyRecipesOrderBy';
 
-export type SignUploadBodyTarget = typeof SignUploadBodyTarget[keyof typeof SignUploadBodyTarget];
-
-
-export const SignUploadBodyTarget = {
-  recipes: 'recipes',
-  ingredients: 'ingredients',
-  categories: 'categories',
-  preparationSteps: 'preparationSteps',
-} as const;
+export type GetMyRecipesParams = {
+/**
+ * @exclusiveMinimum 0
+ */
+page?: number;
+/**
+ * @exclusiveMinimum 0
+ */
+limit?: number;
+search?: string;
+orderBy?: GetMyRecipesOrderBy;
+isPublished?: GetMyRecipesIsPublished;
+};

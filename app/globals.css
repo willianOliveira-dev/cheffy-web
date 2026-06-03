@@ -131,3 +131,26 @@
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .kitchen-mode-surface {
+    background-color: rgb(248 240 231);
+  }
+
+  .kitchen-step-title {
+    color: rgb(91 45 25);
+  }
+
+  .kitchen-step-copy {
+    color: rgb(111 61 41);
+  }
+
+  .kitchen-done-button {
+    background-color: rgb(91 45 25);
+    color: white;
+  }
+
+  .kitchen-done-button:hover {
+    background-color: rgb(91 45 25 / 90%);
+  }
+}
