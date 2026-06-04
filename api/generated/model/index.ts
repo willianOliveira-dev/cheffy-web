@@ -75,6 +75,7 @@ export * from './recipeNutritionLabel';
 export * from './recipeSection';
 export * from './recipeSectionIngredient';
 export * from './recipeSectionIngredientIngredient';
+export * from './recipeSectionIngredientIngredientNutrition';
 export * from './recipeSectionIngredientUnit';
 export * from './recipeSummary';
 export * from './recipeSummaryAuthor';

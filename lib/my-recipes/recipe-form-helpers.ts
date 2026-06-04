@@ -1,4 +1,12 @@
-import type { CreateMyRecipeBody, CreateMyRecipeBodySectionsItemIngredientsItemUnit, Ingredient } from "@/api/generated/model";
+import type {
+  CreateMyRecipeBody,
+  CreateMyRecipeBodySectionsItemIngredientsItemUnit,
+  Ingredient,
+  IngredientNutritionProperty,
+  Recipe,
+  RecipeSectionIngredientIngredient,
+  Tag,
+} from "@/api/generated/model";
 import { WEIGHT_UNIT_TO_GRAMS } from "./recipe-form-constants";
 import type { RecipeFormValues } from "./recipe-form-types";
 
@@ -7,11 +15,106 @@ export function mergeIngredients(...ingredientLists: Ingredient[][]) {
 
   for (const ingredientList of ingredientLists) {
     for (const ingredient of ingredientList) {
-      ingredientMap.set(ingredient.id, ingredient);
+      ingredientMap.set(ingredient.id, mergeIngredient(ingredientMap.get(ingredient.id), ingredient));
     }
   }
 
   return Array.from(ingredientMap.values());
+}
+
+function mergeIngredient(current: Ingredient | undefined, next: Ingredient): Ingredient {
+  if (!current) return next;
+
+  return {
+    ...current,
+    ...next,
+    imageUrl: next.imageUrl ?? current.imageUrl,
+    category: next.category ?? current.category,
+    nutrition: next.nutrition ?? current.nutrition,
+  };
+}
+
+export function mergeTags(...tagLists: Tag[][]) {
+  const tagMap = new Map<string, Tag>();
+
+  for (const tagList of tagLists) {
+    for (const tag of tagList) {
+      tagMap.set(tag.id, tag);
+    }
+  }
+
+  return Array.from(tagMap.values());
+}
+
+export function getRecipeIngredients(recipe?: Recipe) {
+  const ingredientMap = new Map<string, Ingredient>();
+
+  for (const section of recipe?.sections ?? []) {
+    for (const sectionIngredient of section.ingredients ?? []) {
+      const ingredient = sectionIngredient.ingredient;
+
+      if (ingredient) {
+        ingredientMap.set(ingredient.id, normalizeRecipeIngredient(ingredient));
+        continue;
+      }
+
+      if (sectionIngredient.ingredientId) {
+        ingredientMap.set(sectionIngredient.ingredientId, {
+          id: sectionIngredient.ingredientId,
+          name: sectionIngredient.displayText,
+          slug: sectionIngredient.ingredientId,
+          imageUrl: null,
+          category: null,
+        });
+      }
+    }
+  }
+
+  return Array.from(ingredientMap.values());
+}
+
+function normalizeRecipeIngredient(ingredient: RecipeSectionIngredientIngredient): Ingredient {
+  return {
+    id: ingredient.id,
+    name: ingredient.name,
+    slug: ingredient.slug,
+    imageUrl: ingredient.imageUrl,
+    category: ingredient.category,
+    nutrition: normalizeRecipeIngredientNutrition(ingredient.id, ingredient.nutrition),
+  };
+}
+
+function normalizeRecipeIngredientNutrition(
+  ingredientId: string,
+  nutrition: RecipeSectionIngredientIngredient["nutrition"],
+): IngredientNutritionProperty | undefined {
+  if (!nutrition) return nutrition;
+
+  return {
+    id: `${ingredientId}-nutrition`,
+    ingredientId,
+    source: null,
+    ...nutrition,
+  };
+}
+
+export function getRecipeTags(recipe?: Recipe) {
+  const tagMap = new Map<string, Tag>();
+
+  for (const item of recipe?.tags ?? []) {
+    const maybeDirectTag = item as unknown as Partial<Tag>;
+    const tag = item.tag ?? (maybeDirectTag.id && maybeDirectTag.name ? maybeDirectTag : undefined);
+
+    if (tag?.id && tag.name) {
+      tagMap.set(tag.id, {
+        id: tag.id,
+        name: tag.name,
+        slug: tag.slug ?? tag.id,
+      });
+    }
+  }
+
+  return Array.from(tagMap.values());
 }
 
 export function isWeightMeasurementUnit(unit?: CreateMyRecipeBodySectionsItemIngredientsItemUnit) {

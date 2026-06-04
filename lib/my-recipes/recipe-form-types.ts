@@ -98,15 +98,15 @@ export function mapRecipeToFormValues(recipe: Recipe): RecipeFormValues {
   return {
     title: recipe.title,
     description: recipe.description,
-    imageUrl: recipe.imageUrl,
-    imagePublicId: undefined,
+    imageUrl: getRecipeImageUrl(recipe),
+    imagePublicId: getRecipeImagePublicId(recipe),
     prepTime: recipe.prepTime,
     cookTime: recipe.cookTime,
     yieldAmount: recipe.yieldAmount,
     yieldUnit: recipe.yieldUnit,
     difficulty: recipe.difficulty,
     categoryId: recipe.categoryId,
-    tagIds: recipe.tags?.map((tag) => tag.tagId) ?? [],
+    tagIds: recipe.tags?.map((tag) => tag.tagId ?? ("id" in tag ? tag.id : "")).filter(Boolean) ?? [],
     sections: [...(recipe.sections ?? [])]
       .sort((left, right) => left.position - right.position)
       .map((section, sectionIndex) => ({
@@ -134,4 +134,26 @@ export function mapRecipeToFormValues(recipe: Recipe): RecipeFormValues {
           })),
       })),
   };
+}
+
+function getRecipeImageUrl(recipe: Recipe) {
+  const payload = recipe as unknown as {
+    imageUrl?: string | null;
+    image_url?: string | null;
+    secureUrl?: string | null;
+    secure_url?: string | null;
+  };
+
+  return payload.imageUrl ?? payload.image_url ?? payload.secureUrl ?? payload.secure_url ?? null;
+}
+
+function getRecipeImagePublicId(recipe: Recipe) {
+  const payload = recipe as unknown as {
+    imagePublicId?: string | null;
+    image_public_id?: string | null;
+    publicId?: string | null;
+    public_id?: string | null;
+  };
+
+  return payload.imagePublicId ?? payload.image_public_id ?? payload.publicId ?? payload.public_id ?? undefined;
 }

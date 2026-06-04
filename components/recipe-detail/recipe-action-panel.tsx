@@ -13,9 +13,10 @@ type RecipeActionPanelProps = {
   recipe: Recipe;
   onPrint: () => void;
   onOpenCookingMode: () => void;
+  showPublicActions?: boolean;
 };
 
-export function RecipeActionPanel({ recipe, onPrint, onOpenCookingMode }: RecipeActionPanelProps) {
+export function RecipeActionPanel({ recipe, onPrint, onOpenCookingMode, showPublicActions = true }: RecipeActionPanelProps) {
   return (
     <aside className="order-first flex flex-col gap-4 lg:sticky lg:top-24 lg:order-0">
       <Card>
@@ -33,13 +34,15 @@ export function RecipeActionPanel({ recipe, onPrint, onOpenCookingMode }: Recipe
           <Separator />
 
           <div className="flex flex-col gap-2">
-            <FavoriteRecipeButton
-              recipeId={recipe.id}
-              initialFavorited={recipe.isFavorited}
-              variant="default"
-              size="lg"
-              className="w-full"
-            />
+            {showPublicActions && (
+              <FavoriteRecipeButton
+                recipeId={recipe.id}
+                initialFavorited={recipe.isFavorited}
+                variant="default"
+                size="lg"
+                className="w-full"
+              />
+            )}
             <Button type="button" variant="outline" className="w-full rounded-full" onClick={onOpenCookingMode}>
               <CookingPot data-icon="inline-start" />
               Modo cozinha
@@ -52,14 +55,16 @@ export function RecipeActionPanel({ recipe, onPrint, onOpenCookingMode }: Recipe
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Compartilhar</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <RecipeShareGrid recipe={recipe} />
-        </CardContent>
-      </Card>
+      {showPublicActions && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Compartilhar</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RecipeShareGrid recipe={recipe} />
+          </CardContent>
+        </Card>
+      )}
     </aside>
   );
 }

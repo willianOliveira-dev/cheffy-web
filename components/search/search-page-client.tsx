@@ -11,8 +11,8 @@ import { SearchFormValues, searchSchema } from "@/lib/schemas/search";
 import { cn } from "@/lib/utils";
 
 import { Form } from "@/components/ui/form";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
+import { PaginationControls } from "@/components/shared/pagination-controls";
 import { SearchFilters } from "./search-filters";
 import { SearchHeader } from "./search-header";
 import { SearchEmptyState } from "./search-empty-state";
@@ -179,70 +179,7 @@ export function SearchPageClient() {
                   ))}
                 </div>
 
-                {meta && meta.totalPages > 1 && (
-                  <Pagination>
-                    <PaginationContent>
-                      <PaginationItem>
-                        <PaginationPrevious
-                          text="Anterior"
-                          href="#"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            if (meta.hasPrevious) handlePageChange(meta.page - 1);
-                          }}
-                          className={!meta.hasPrevious ? "pointer-events-none opacity-50" : ""}
-                        />
-                      </PaginationItem>
-
-                      {Array.from({ length: meta.totalPages }).map((_, index) => {
-                        const pageNumber = index + 1;
-                        if (
-                          pageNumber === 1 ||
-                          pageNumber === meta.totalPages ||
-                          (pageNumber >= meta.page - 1 && pageNumber <= meta.page + 1)
-                        ) {
-                          return (
-                            <PaginationItem key={pageNumber}>
-                              <PaginationLink
-                                href="#"
-                                isActive={pageNumber === meta.page}
-                                onClick={(event) => {
-                                  event.preventDefault();
-                                  handlePageChange(pageNumber);
-                                }}
-                              >
-                                {pageNumber}
-                              </PaginationLink>
-                            </PaginationItem>
-                          );
-                        }
-                        if (
-                          (pageNumber === 2 && meta.page > 3) ||
-                          (pageNumber === meta.totalPages - 1 && meta.page < meta.totalPages - 2)
-                        ) {
-                          return (
-                            <PaginationItem key={pageNumber}>
-                              <span className="px-4 py-2 text-muted-foreground">...</span>
-                            </PaginationItem>
-                          );
-                        }
-                        return null;
-                      })}
-
-                      <PaginationItem>
-                        <PaginationNext
-                          text="Próximo"
-                          href="#"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            if (meta.hasNext) handlePageChange(meta.page + 1);
-                          }}
-                          className={!meta.hasNext ? "pointer-events-none opacity-50" : ""}
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
-                )}
+                <PaginationControls meta={meta} onPageChange={handlePageChange} />
               </div>
             )}
           </main>

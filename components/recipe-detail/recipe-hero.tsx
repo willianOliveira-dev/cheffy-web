@@ -11,9 +11,11 @@ import { Button } from "@/components/ui/button";
 
 type RecipeHeroProps = {
   recipe: Recipe;
+  backHref?: string;
+  backLabel?: string;
 };
 
-export function RecipeHero({ recipe }: RecipeHeroProps) {
+export function RecipeHero({ recipe, backHref = "/receitas", backLabel = "Voltar" }: RecipeHeroProps) {
   return (
     <section className="relative min-h-[34rem] overflow-hidden bg-foreground text-background">
       <div className="absolute inset-0">
@@ -37,9 +39,9 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
             variant="outline"
             className="rounded-full border-white/30 bg-white/10 text-white backdrop-blur-md hover:bg-white/20 hover:text-white"
           >
-            <Link href="/receitas">
+            <Link href={backHref}>
               <ArrowLeft data-icon="inline-start" />
-              Voltar
+              {backLabel}
             </Link>
           </Button>
         </div>
