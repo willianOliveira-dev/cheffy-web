@@ -4,7 +4,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { getHealth } from "@/services/api/generated/health/health";
 
-const TIMEOUT_MS = 5_000;
+const TIMEOUT_MS = 10_000;
 const RETRY_INTERVAL_MS = 3_000;
 
 type GateStatus = "loading" | "online";
