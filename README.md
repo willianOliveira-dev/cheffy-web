@@ -4,6 +4,7 @@
 
   <h1>Cheffy Web</h1>
   <p>Frontend web da plataforma Cheffy — receitas, favoritos, busca culinária e assistente gastronômico com IA</p>
+  <p>⚠️ Detalhe importante: Ao acessar o site, pode levar até 5 minutos para o servidor cheffy-api.onrender.com 'acordar', por estar hospedado em um serviço gratuito da plataforma Render. Enquanto o servidor inicia, aparecerá o botão 'Tentar Novamente' para que o usuário não precise atualizar a página. Quando o servidor estiver disponível, o site entrará automaticamente.</p>
 
   ![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs)
   ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=000000)
