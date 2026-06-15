@@ -62,8 +62,7 @@ export function ServerWakeGate({ children }: ServerWakeGateProps): ReactNode {
         >
           <p className="font-medium text-foreground">Estamos preparando o Cheffy para você</p>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            A primeira abertura pode levar até 5 minutos. Esta página continuará tentando
-            automaticamente.
+            A primeira abertura pode levar até 5 minutos.
           </p>
         </div>
       </div>
