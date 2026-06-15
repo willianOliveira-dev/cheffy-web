@@ -5,7 +5,7 @@ import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import { BookOpen, Heart, LogIn, LogOut, PlusCircle, User } from "lucide-react";
 import { AuthDialog } from "@/components/auth/auth-dialog";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/services/auth/client";
 import {
   AlertDialog,
   AlertDialogAction,

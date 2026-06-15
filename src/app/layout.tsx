@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, EB_Garamond } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/class-names";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ServerWakeGate } from "@/components/providers/server-wake-gate";
 

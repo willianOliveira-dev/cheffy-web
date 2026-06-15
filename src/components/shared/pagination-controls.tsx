@@ -1,7 +1,8 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import { buildPaginationItems, type PaginationMeta } from "@/lib/pagination";
+import { buildPaginationItems } from "@/utils/pagination";
+import type { PaginationMeta } from "@/types/pagination";
 import {
   Pagination,
   PaginationContent,

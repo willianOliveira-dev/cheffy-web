@@ -7,8 +7,8 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGetRecipes } from "@/services/api/generated/recipes/recipes";
 import { GetRecipesDifficulty, GetRecipesOrderBy } from "@/services/api/generated/model";
-import { SearchFormValues, searchSchema } from "@/lib/schemas/search";
-import { cn } from "@/lib/utils";
+import { SearchFormValues, searchSchema } from "@/schemas/search";
+import { cn } from "@/utils/class-names";
 
 import { Form } from "@/components/ui/form";
 

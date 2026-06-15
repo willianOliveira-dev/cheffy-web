@@ -13,7 +13,7 @@ import {
   useGetMyRecipeById,
   useUpdateMyRecipe,
 } from "@/services/api/generated/my-recipes/my-recipes";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/services/auth/client";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

@@ -1,7 +1,7 @@
 import type { KeyboardEvent } from "react";
 import { MessageSquareText, Send } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/class-names";
 import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import {

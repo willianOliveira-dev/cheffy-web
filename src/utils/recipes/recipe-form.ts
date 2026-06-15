@@ -7,8 +7,8 @@ import type {
   RecipeSectionIngredientIngredient,
   Tag,
 } from "@/services/api/generated/model";
-import { WEIGHT_UNIT_TO_GRAMS } from "./recipe-form-constants";
-import type { RecipeFormValues } from "./recipe-form-types";
+import { WEIGHT_UNIT_TO_GRAMS } from "@/constants/recipe-form";
+import type { RecipeFormValues } from "@/types/recipe-form";
 
 export function mergeIngredients(...ingredientLists: Ingredient[][]) {
   const ingredientMap = new Map<string, Ingredient>();

@@ -8,7 +8,7 @@ import {
   formatNutritionServingLabel,
   formatNutritionServingsLabel,
   kcalToKj,
-} from "@/lib/recipe-formatters";
+} from "@/utils/recipes/recipe-formatters";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {

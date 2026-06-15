@@ -4,7 +4,7 @@ import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import Link from "next/link";
 import { Clock, Eye, Users } from "lucide-react";
 import { RecipeSummary } from "@/services/api/generated/model";
-import { formatYield } from "@/lib/recipe-formatters";
+import { formatYield } from "@/utils/recipes/recipe-formatters";
 import { FavoriteRecipeButton } from "@/components/shared/favorite-recipe-button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";

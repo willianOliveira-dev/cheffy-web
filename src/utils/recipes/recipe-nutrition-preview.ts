@@ -1,41 +1,10 @@
 import type { Ingredient } from "@/services/api/generated/model";
-import type { RecipeFormValues } from "@/lib/my-recipes/recipe-form-types";
-
-export type NutritionKey =
-  | "energyKcal"
-  | "carbohydrates"
-  | "totalSugars"
-  | "addedSugars"
-  | "protein"
-  | "totalFat"
-  | "saturatedFat"
-  | "transFat"
-  | "fiber"
-  | "sodiumMg";
-
-export type NutritionValues = Record<NutritionKey, number>;
-
-export type NutritionPreviewIngredient = {
-  name: string;
-  displayText: string;
-  quantity: string;
-  quantityInGrams: number;
-  unit: string;
-  sectionTitle: string;
-  hasNutrition: boolean;
-};
-
-export type NutritionPreview = {
-  ingredients: NutritionPreviewIngredient[];
-  totals: NutritionValues;
-  per100g: NutritionValues;
-  perServing: NutritionValues;
-  dailyValuePercent: Partial<NutritionValues>;
-  totalWeightInGrams: number;
-  servingWeightInGrams: number;
-  servingsPerRecipe: number;
-  isApproximate: boolean;
-};
+import type {
+  NutritionPreview,
+  NutritionPreviewIngredient,
+  NutritionValues,
+} from "@/types/nutrition-preview";
+import type { RecipeFormValues } from "@/types/recipe-form";
 
 type NutritionPreviewSource = Pick<RecipeFormValues, "sections" | "yieldAmount" | "yieldUnit">;
 

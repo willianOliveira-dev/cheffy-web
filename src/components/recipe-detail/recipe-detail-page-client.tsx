@@ -1,6 +1,6 @@
 "use client";
 
-import { useRecipeDetail } from "@/lib/recipe-detail/use-recipe-detail";
+import { useRecipeDetail } from "@/hooks/use-recipe-detail";
 import { SiteHeader } from "@/components/layout/site-header";
 import { RecipeDetailLoadingState } from "./recipe-detail-loading-state";
 import { RecipeDetailNotFoundState } from "./recipe-detail-not-found-state";

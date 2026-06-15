@@ -5,7 +5,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useForm, useWatch } from "react-hook-form";
 import { GetMyFavoriteRecipesOrderBy } from "@/services/api/generated/model/getMyFavoriteRecipesOrderBy";
 import { useGetMyFavoriteRecipes } from "@/services/api/generated/users/users";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/class-names";
 import { AuthDialog } from "@/components/auth/auth-dialog";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/services/auth/client";
 import { FavoritesHero } from "./favorites-hero";
 import { FavoritesAuthPrompt, FavoritesEmptyState } from "./favorites-empty-state";
 

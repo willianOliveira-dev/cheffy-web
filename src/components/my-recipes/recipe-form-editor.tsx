@@ -1,6 +1,6 @@
 "use client";
 
-import type { RecipeFormController } from "@/lib/my-recipes/use-recipe-form-controller";
+import type { RecipeFormController } from "@/hooks/use-recipe-form-controller";
 import { RecipeDetailsCard } from "./recipe-details-card";
 import { RecipeMainInfoCard } from "./recipe-main-info-card";
 import { RecipeSectionsCard } from "./recipe-sections-card";

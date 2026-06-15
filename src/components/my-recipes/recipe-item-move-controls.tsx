@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDown, ArrowUp, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/class-names";
 import { Button } from "@/components/ui/button";
 
 type RecipeItemMoveControlsProps = {

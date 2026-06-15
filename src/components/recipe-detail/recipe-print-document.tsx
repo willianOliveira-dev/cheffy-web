@@ -10,7 +10,7 @@ import {
   formatNutritionServingsLabel,
   formatYield,
   kcalToKj,
-} from "@/lib/recipe-formatters";
+} from "@/utils/recipes/recipe-formatters";
 
 type RecipePrintDocumentProps = {
   recipe: Recipe;

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import type { RecipeSummary } from "@/services/api/generated/model";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/class-names";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

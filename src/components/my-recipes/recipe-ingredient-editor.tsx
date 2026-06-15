@@ -19,13 +19,13 @@ import {
 } from "@/components/ui/select";
 import { IngredientPicker } from "./ingredient-picker";
 import { RecipeItemMoveControls } from "./recipe-item-move-controls";
-import { UNIT_LABELS } from "@/lib/my-recipes/recipe-form-constants";
+import { UNIT_LABELS } from "@/constants/recipe-form";
 import {
   convertQuantityToGrams,
   formatIngredientWeight,
   isWeightMeasurementUnit,
-} from "@/lib/my-recipes/recipe-form-helpers";
-import type { RecipeFormValues } from "@/lib/my-recipes/recipe-form-types";
+} from "@/utils/recipes/recipe-form";
+import type { RecipeFormValues } from "@/types/recipe-form";
 
 type RecipeIngredientEditorProps = {
   form: UseFormReturn<RecipeFormValues>;

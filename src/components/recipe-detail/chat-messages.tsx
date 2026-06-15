@@ -1,7 +1,7 @@
 import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { User } from "lucide-react";
 import { Streamdown } from "streamdown";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/class-names";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type ChatMessage = {

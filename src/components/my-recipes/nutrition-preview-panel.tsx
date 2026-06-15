@@ -1,6 +1,6 @@
 "use client";
 
-import type { NutritionKey, NutritionPreview } from "@/lib/recipe-nutrition-preview";
+import type { NutritionKey, NutritionPreview } from "@/types/nutrition-preview";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,

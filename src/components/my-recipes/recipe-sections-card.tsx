@@ -1,8 +1,8 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import type { RecipeFormController } from "@/lib/my-recipes/use-recipe-form-controller";
-import { createEmptySection } from "@/lib/my-recipes/recipe-form-types";
+import type { RecipeFormController } from "@/hooks/use-recipe-form-controller";
+import { createEmptySection } from "@/utils/recipes/recipe-form-values";
 import { Button } from "@/components/ui/button";
 import {
   Card,

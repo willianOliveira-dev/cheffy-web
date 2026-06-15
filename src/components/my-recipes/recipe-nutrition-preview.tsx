@@ -4,9 +4,9 @@ import { useDeferredValue, useMemo } from "react";
 import { useWatch } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 import type { Ingredient } from "@/services/api/generated/model";
-import { calculateNutritionPreview } from "@/lib/recipe-nutrition-preview";
-import { EMPTY_RECIPE_SECTIONS } from "@/lib/my-recipes/recipe-form-constants";
-import type { RecipeFormValues } from "@/lib/my-recipes/recipe-form-types";
+import { calculateNutritionPreview } from "@/utils/recipes/recipe-nutrition-preview";
+import { EMPTY_RECIPE_SECTIONS } from "@/constants/recipe-form";
+import type { RecipeFormValues } from "@/types/recipe-form";
 import { NutritionPreviewPanel } from "./nutrition-preview-panel";
 
 type RecipeNutritionPreviewProps = {

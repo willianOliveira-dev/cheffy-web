@@ -3,7 +3,7 @@ import {
   CreateMyRecipeBodyDifficulty,
   CreateMyRecipeBodyYieldUnit,
 } from "@/services/api/generated/model";
-import type { RecipeFormValues } from "./recipe-form-types";
+import type { RecipeFormValues } from "@/types/recipe-form";
 
 export const INGREDIENTS_PAGE_SIZE = 100;
 export const EMPTY_TAG_IDS: string[] = [];

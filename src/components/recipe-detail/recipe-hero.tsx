@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { ElementType } from "react";
 import { ArrowLeft, Clock, Eye, Flame, Users } from "lucide-react";
 import type { Recipe } from "@/services/api/generated/model";
-import { formatDifficulty, formatMinutes, formatYield } from "@/lib/recipe-formatters";
+import { formatDifficulty, formatMinutes, formatYield } from "@/utils/recipes/recipe-formatters";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 

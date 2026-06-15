@@ -18,7 +18,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { SearchFormValues } from "@/lib/schemas/search";
+import type { SearchFormValues } from "@/schemas/search";
 import { SearchFilters } from "./search-filters";
 
 type SearchHeaderProps = {

@@ -4,8 +4,8 @@ import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { useState } from "react";
 import { Loader2, X } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { authClient } from "@/lib/auth-client";
-import { buildAuthRedirectURL } from "@/lib/auth-redirect-url";
+import { authClient } from "@/services/auth/client";
+import { buildAuthRedirectURL } from "@/utils/auth-redirect-url";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

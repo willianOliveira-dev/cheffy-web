@@ -3,7 +3,7 @@ import { Control, FieldValues, Path } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/class-names";
 
 type SearchSubmitFieldProps<TFieldValues extends FieldValues> = {
   control: Control<TFieldValues>;

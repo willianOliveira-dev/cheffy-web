@@ -26,8 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DIFFICULTY_LABELS, YIELD_UNIT_LABELS } from "@/lib/my-recipes/recipe-form-constants";
-import type { RecipeFormValues } from "@/lib/my-recipes/recipe-form-types";
+import { DIFFICULTY_LABELS, YIELD_UNIT_LABELS } from "@/constants/recipe-form";
+import type { RecipeFormValues } from "@/types/recipe-form";
 
 type RecipeDetailsCardProps = {
   form: UseFormReturn<RecipeFormValues>;

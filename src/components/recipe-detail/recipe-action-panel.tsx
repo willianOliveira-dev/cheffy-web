@@ -2,7 +2,7 @@
 
 import { CookingPot, Printer } from "lucide-react";
 import type { Recipe } from "@/services/api/generated/model";
-import { formatDifficulty, formatMinutes, formatYield } from "@/lib/recipe-formatters";
+import { formatDifficulty, formatMinutes, formatYield } from "@/utils/recipes/recipe-formatters";
 import { FavoriteRecipeButton } from "@/components/shared/favorite-recipe-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

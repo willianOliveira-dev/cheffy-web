@@ -1,12 +1,12 @@
 "use client";
 
 import type { CreateMyRecipeBody, Recipe } from "@/services/api/generated/model";
-import { useRecipeFormController } from "@/lib/my-recipes/use-recipe-form-controller";
+import { useRecipeFormController } from "@/hooks/use-recipe-form-controller";
 import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RecipeFormEditor } from "./recipe-form-editor";
 import { RecipeNutritionPreview } from "./recipe-nutrition-preview";
-import type { RecipeFormMode } from "@/lib/my-recipes/recipe-form-types";
+import type { RecipeFormMode } from "@/types/recipe-form";
 
 type RecipeFormProps = {
   mode: RecipeFormMode;

@@ -3,7 +3,7 @@
 import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { ImagePlus, Loader2 } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/class-names";
 import {
   Card,
   CardContent,
@@ -15,7 +15,7 @@ import { FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { RecipeFormValues } from "@/lib/my-recipes/recipe-form-types";
+import type { RecipeFormValues } from "@/types/recipe-form";
 
 type RecipeMainInfoCardProps = {
   form: UseFormReturn<RecipeFormValues>;

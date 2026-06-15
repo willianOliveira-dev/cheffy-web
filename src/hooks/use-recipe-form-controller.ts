@@ -9,20 +9,19 @@ import { useGetCategories } from "@/services/api/generated/categories/categories
 import { useGetIngredients } from "@/services/api/generated/ingredients/ingredients";
 import { useSignUpload } from "@/services/api/generated/storage/storage";
 import { useGetTags } from "@/services/api/generated/tags/tags";
-import { EMPTY_TAG_IDS, INGREDIENTS_PAGE_SIZE } from "@/lib/my-recipes/recipe-form-constants";
+import { EMPTY_TAG_IDS, INGREDIENTS_PAGE_SIZE } from "@/constants/recipe-form";
 import {
   buildRecipePayload,
   getRecipeIngredients,
   getRecipeTags,
   mergeIngredients,
   mergeTags,
-} from "@/lib/my-recipes/recipe-form-helpers";
+} from "@/utils/recipes/recipe-form";
 import {
   createEmptyRecipeFormValues,
   mapRecipeToFormValues,
-  type RecipeFormMode,
-  type RecipeFormValues,
-} from "@/lib/my-recipes/recipe-form-types";
+} from "@/utils/recipes/recipe-form-values";
+import type { RecipeFormMode, RecipeFormValues } from "@/types/recipe-form";
 
 type UseRecipeFormControllerParams = {
   mode: RecipeFormMode;

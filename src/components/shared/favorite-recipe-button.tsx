@@ -7,8 +7,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useFavoriteRecipe, useUnfavoriteRecipe, getGetRecipesQueryKey } from "@/services/api/generated/recipes/recipes";
 import { getGetMyFavoriteRecipesQueryKey } from "@/services/api/generated/users/users";
 import { getGetHomeQueryKey } from "@/services/api/generated/home/home";
-import { authClient } from "@/lib/auth-client";
-import { cn } from "@/lib/utils";
+import { authClient } from "@/services/auth/client";
+import { cn } from "@/utils/class-names";
 import { AuthDialog } from "@/components/auth/auth-dialog";
 import { Button } from "@/components/ui/button";
 

@@ -6,7 +6,7 @@ import { getGetHomeQueryKey } from "@/services/api/generated/home/home";
 import { useGetMyRecipeById } from "@/services/api/generated/my-recipes/my-recipes";
 import { getGetRecipesQueryKey, useGetRecipeBySlug } from "@/services/api/generated/recipes/recipes";
 import { getGetMyFavoriteRecipesQueryKey } from "@/services/api/generated/users/users";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/services/auth/client";
 
 type UseRecipeDetailParams = {
   slug?: string;

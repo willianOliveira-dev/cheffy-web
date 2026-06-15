@@ -4,12 +4,12 @@ import { FallbackImage as Image } from "@/components/shared/fallback-image";
 import { Loader2, X } from "lucide-react";
 import { useWatch } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/class-names";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { RecipeItemMoveControls } from "./recipe-item-move-controls";
-import type { RecipeFormValues } from "@/lib/my-recipes/recipe-form-types";
+import type { RecipeFormValues } from "@/types/recipe-form";
 
 type RecipeStepEditorProps = {
   form: UseFormReturn<RecipeFormValues>;

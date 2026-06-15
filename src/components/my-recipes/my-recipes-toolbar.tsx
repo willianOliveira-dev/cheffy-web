@@ -2,7 +2,7 @@
 
 import type { UseFormReturn } from "react-hook-form";
 import { GetMyRecipesOrderBy } from "@/services/api/generated/model";
-import type { MyRecipesFilters } from "@/lib/my-recipes/my-recipes-list-types";
+import type { MyRecipesFilters } from "@/types/my-recipes";
 import { SearchSubmitField } from "@/components/shared/search-submit-field";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import {

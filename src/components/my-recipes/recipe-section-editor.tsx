@@ -13,8 +13,8 @@ import { RecipeStepEditor } from "./recipe-step-editor";
 import {
   createEmptyIngredient,
   createEmptyStep,
-  type RecipeFormValues,
-} from "@/lib/my-recipes/recipe-form-types";
+} from "@/utils/recipes/recipe-form-values";
+import type { RecipeFormValues } from "@/types/recipe-form";
 
 type SectionEditorProps = {
   form: UseFormReturn<RecipeFormValues>;
